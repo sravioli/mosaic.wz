@@ -33,8 +33,10 @@ config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_max_width = 24
 config.check_for_updates = false
-mosaic.apply_to_config(config)
+-- The scheme first: mosaic draws the new-tab button in the scheme set when it
+-- is applied.
 require("kanagawa.api").apply_to_config(config, { scheme = os.getenv "MOSAIC_KANAGAWA" or "wave" })
+mosaic.apply_to_config(config)
 
 -- Three tabs, so the preset's active, inactive and hover looks all show.
 wezterm.on("gui-startup", function()
