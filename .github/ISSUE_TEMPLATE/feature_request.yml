@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Search [existing issues](https://github.com/sravioli/mosaic.wz/issues)
-        first to make sure this feature hasn't already been requested.
+        first, to make sure that nobody requested this feature before.
   - type: textarea
     id: motivation
     attributes:

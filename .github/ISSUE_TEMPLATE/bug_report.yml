@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Search [existing issues](https://github.com/sravioli/mosaic.wz/issues)
-        first to make sure this bug hasn't already been reported.
+        first, to make sure that nobody reported this bug before.
   - type: input
     id: wezterm-version
     attributes:

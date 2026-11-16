@@ -30,7 +30,7 @@ Fill in what applies, delete the rest.
       applicable.
 - [ ] `.github/readme.md` and annotations updated for public API or default
       changes.
-- [ ] Renderer changes were benchmarked with `chrono` before and after.
+- [ ] For a renderer change, I ran the `chrono` benchmark before and after.
 - [ ] Existing presets and module names still work.
-- [ ] Checks pass: `busted`, `luacheck plugin spec`,
-      `selene --display-style=quiet plugin`, `stylua --check plugin spec`.
+- [ ] The checks in the contributing guide pass, and commits follow
+      Conventional Commits.
