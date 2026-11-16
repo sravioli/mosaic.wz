@@ -1,6 +1,7 @@
--- WezTerm config for `scripts/screenshots.sh`: one small window with the bar
--- of the preset named by $MOSAIC_PRESET. Settings come from the environment so
--- the script stays the only place that knows the defaults.
+-- Minimal WezTerm config for `scripts/screenshots.sh`: one small window with
+-- the bar of the preset named by $MOSAIC_PRESET, in the Kanagawa scheme named
+-- by $MOSAIC_KANAGAWA ("wave" dark, "lotus" light). Settings come from the
+-- environment so the script stays the only place that knows the defaults.
 local wezterm = require "wezterm"
 
 local repo = assert(os.getenv "MOSAIC_REPO", "MOSAIC_REPO is not set")
@@ -11,6 +12,8 @@ for _, name in ipairs { "warp", "log", "warden", "sigil", "ribbon" } do
 end
 package.path = repo .. "/plugin/?.lua;" .. repo .. "/plugin/?/init.lua;" .. package.path
 
+wezterm.plugin.require "https://github.com/kanagawa-community/wezterm"
+
 local mosaic = require "mosaic.api"
 mosaic.setup { preset = assert(os.getenv "MOSAIC_PRESET"), position = "top" }
 
@@ -19,7 +22,6 @@ mosaic.setup { preset = assert(os.getenv "MOSAIC_PRESET"), position = "top" }
 require("mosaic.engine.system").cpu()
 
 local config = wezterm.config_builder()
-config.color_scheme = os.getenv "MOSAIC_SCHEME" or "Catppuccin Mocha"
 config.font_size = tonumber(os.getenv "MOSAIC_FONT_SIZE") or 16
 config.initial_cols = tonumber(os.getenv "MOSAIC_COLS") or 140
 config.initial_rows = 1 -- the bar plus one row; the script keeps only the bar
@@ -32,6 +34,7 @@ config.hide_tab_bar_if_only_one_tab = false
 config.tab_max_width = 24
 config.check_for_updates = false
 mosaic.apply_to_config(config)
+require("kanagawa.api").apply_to_config(config, { scheme = os.getenv "MOSAIC_KANAGAWA" or "wave" })
 
 -- Three tabs, so the preset's active, inactive and hover looks all show.
 wezterm.on("gui-startup", function()

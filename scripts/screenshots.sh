@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Take one screenshot of the bar per preset into .github/assets/<preset>.png.
+# Take screenshots of the bar per preset, dark (Kanagawa Wave) and light
+# (Kanagawa Lotus): .github/assets/<preset>-dark.png and <preset>-light.png.
 #
 # Needs KDE Plasma (spectacle) and wezterm; oxipng is used when installed.
 # Run it from a session you leave alone: each shot opens a window that must
@@ -8,8 +9,7 @@
 #   scripts/screenshots.sh                 # every preset
 #   scripts/screenshots.sh pure bubbles    # only these
 #
-# Settings (environment): MOSAIC_SCHEME (default "Catppuccin Mocha"),
-# MOSAIC_FONT_SIZE (16), MOSAIC_COLS (140), MOSAIC_CWD (home), MOSAIC_DELAY (seconds to wait for the window, default 5)
+# Settings (environment): MOSAIC_FONT_SIZE (16), MOSAIC_COLS (140), MOSAIC_CWD (home), MOSAIC_DELAY (seconds to wait for the window, default 5)
 # the window, default 3).
 #
 # The shot is the bar row of the window at its real pixel size (the window is
@@ -34,14 +34,13 @@ fi
 mkdir -p "$out"
 export MOSAIC_REPO="$repo"
 
-for preset in "${presets[@]}"; do
-  export MOSAIC_PRESET="$preset"
+shoot() { # preset kanagawa-scheme file-name
+  local tmp w h ok=
   tmp=$(mktemp --suffix=.png)
-  trap 'rm -f "$tmp"' EXIT
-  ok=
   for attempt in 1 2 3; do
-    wezterm --config-file "$repo/scripts/screenshot.lua" start --always-new-process &
-    pid=$!
+    MOSAIC_PRESET=$1 MOSAIC_KANAGAWA=$2 \
+      wezterm --config-file "$repo/scripts/screenshot.wezterm.lua" start --always-new-process &
+    local pid=$!
     sleep "$delay"
     spectacle --activewindow --background --nonotify --output "$tmp"
     kill "$pid" 2>/dev/null || true
@@ -54,10 +53,18 @@ for preset in "${presets[@]}"; do
       ok=1
       break
     fi
-    echo "$preset: wrong window captured (attempt $attempt), retrying" >&2
+    echo "$3: wrong window captured (attempt $attempt), retrying" >&2
   done
-  [ -n "$ok" ] || { echo "$preset: never got the focus; click away and rerun" >&2; exit 1; }
-  magick "$tmp" -gravity North -crop 100%x50%+0+0 +repage "$out/$preset.png"
-  command -v oxipng >/dev/null && oxipng -q -o4 --strip all "$out/$preset.png"
-  echo "$out/$preset.png"
+  if [ -n "$ok" ]; then
+    magick "$tmp" -gravity North -crop 100%x50%+0+0 +repage "$out/$3.png"
+    command -v oxipng >/dev/null && oxipng -q -o4 --strip all "$out/$3.png"
+    echo "$out/$3.png"
+  fi
+  rm -f "$tmp"
+  [ -n "$ok" ] || { echo "$3: never got the focus; click away and rerun" >&2; exit 1; }
+}
+
+for preset in "${presets[@]}"; do
+  shoot "$preset" wave "$preset-dark"
+  shoot "$preset" lotus "$preset-light"
 done
