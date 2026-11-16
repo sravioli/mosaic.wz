@@ -5,7 +5,7 @@
 ---Module lookup: alias resolution, per-window `update` caching, and the
 ---user's `options[name]` merged into each spec.
 
--- Live options table; `mosaic.config.setup()` updates it in place.
+-- Live options table. `mosaic.config.setup()` updates it in place.
 local Opts = require("mosaic.engine.config").live ---@class Mosaic.Options
 
 local log = require "mosaic.engine.logger"

@@ -4,7 +4,7 @@
 
 ---Group fitting: the greedy, balanced and exhaustive strategies.
 
--- Live options table; `mosaic.config.setup()` updates it in place.
+-- Live options table. `mosaic.config.setup()` updates it in place.
 local Opts = require("mosaic.engine.config").live ---@class Mosaic.Options
 local log = require "mosaic.engine.logger"
 

@@ -5,7 +5,7 @@
 ---Preset decoration: the decorator call, the options that must win over it,
 ---edge context and group positions.
 
--- Live options table; `mosaic.config.setup()` updates it in place.
+-- Live options table. `mosaic.config.setup()` updates it in place.
 local Opts = require("mosaic.engine.config").live ---@class Mosaic.Options
 
 local M = require "mosaic.engine.render.state"

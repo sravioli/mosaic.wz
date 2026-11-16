@@ -173,7 +173,7 @@ end
 
 ---Columns available for the right-status bar in the current render cycle.
 ---
----```
+---```text
 ---  right_available = total_screen_width
 ---                  − tab_cells
 ---                  − left_status
@@ -181,11 +181,11 @@ end
 ---```
 ---
 ---All inputs are guaranteed current-cycle when called during the right-status
----render pass (after `Renderer.commit_left()`).
+---render pass (after `Renderer.commit_left()`). Pass `tabs` when you read the tab
+---columns earlier in the render. A render waits on the GUI thread, and another
+---window's `format-tab-title` can switch the live widths meanwhile.
 ---
 ---@param  tabs? integer tab columns read earlier in this render (default: now).
----         A render waits on the GUI thread, and another window's
----         `format-tab-title` can switch the live widths meanwhile.
 ---@return integer
 function M.right_available(tabs)
   return math.max(

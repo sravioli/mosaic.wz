@@ -6,6 +6,8 @@
 
 local wezterm = require "wezterm"
 
+---Colour helpers shared by the built-in modules and presets.
+---@class Mosaic.Palette
 local M = {
   ---Focus of the window being drawn, set each frame (fancy titlebar colour).
   focused = true,
@@ -84,7 +86,7 @@ local FOUR = { -0.15, 0, 0.15, 0.25 }
 
 ---`n`-stop gradient, darkest first. `gradient.base` is the colour it starts
 ---from (default `ansi[5]`) and `gradient.stops` the lighten (+) / darken (-)
----offsets; groups longer than the offsets stretch over their range. Cached on
+---offsets. Groups longer than the offsets stretch over their range. Cached on
 ---the inputs, so modules that call this on every repaint share one
 ---computation.
 ---@param  theme     table
@@ -122,10 +124,13 @@ function M.stops(theme, n, gradient)
   return _palette, _text_fg
 end
 
----Colour for a module being decorated: its `tint` (a state colour, such as
----a low battery, which wins over everything), else the user's
----`style.colors[name]`, else the module's `accent` hint, else the built-in
----default for its name.
+---Colour for a module being decorated. The first one that is set wins, in
+---this order:
+---
+--- - its `tint`, a state colour such as a low battery
+--- - the user's `style.colors[name]`
+--- - the module's `accent` hint
+--- - the built-in default for its name
 ---Values are read by `M.resolve`.
 ---@param  ctx  table decorate context
 ---@param  spec table module spec
@@ -144,10 +149,13 @@ end
 ---Tab look for a preset's `format` / `new_tab`: the user's `tabs.style`
 ---over the preset's `defaults`.
 ---
----Returns `fill` (the colour for the tab's state), `text`, `bar`, every other
----`colors` key resolved under the same name, `left` / `right` (edge glyphs),
----`index` (the tab's index text, or the unseen marker) and `label` (the
----new-tab button text).
+---Returns a table with these keys:
+---
+--- - `fill`: the colour for the tab's state
+--- - `text`, `bar`, and every other `colors` key, resolved under the same name
+--- - `left` / `right`: the edge glyphs
+--- - `index`: the tab's index text, or the unseen marker
+--- - `label`: the new-tab button text
 ---@param  ctx      table tab or new-tab context
 ---@param  defaults { colors: table, separators?: table, index?: any, unseen?: string|false, new_tab?: string }
 ---@return table
@@ -234,9 +242,9 @@ end
 
 local _composite = {}
 
----`theme` with its colours taken from the `scheme` option (another scheme's
----name, or a scheme table) and its `tab_bar` kept, so the bar surface still
----matches the strip WezTerm paints. `theme` itself without the option.
+---`theme` with its colours taken from the `scheme` option, which is another
+---scheme's name or a scheme table. Its `tab_bar` is kept, so the bar surface
+---still matches the strip WezTerm paints. Without the option, `theme` itself.
 ---@param  theme table|nil active colour scheme
 ---@param  cfg?  table     effective config (for `color_schemes`)
 ---@return table|nil
@@ -287,9 +295,9 @@ function M.bar_bg(theme, config)
   return bg and tostring(bg)
 end
 
----Plain style: `theme.ansi[index]` text with no background, so the cell
----shows the bar's real surface (the scheme's `tab_bar.background` can differ
----from what WezTerm draws, which would box the text).
+---Plain style: `theme.ansi[index]` text with no background. The cell then
+---shows the bar's real surface. The scheme's `tab_bar.background` can differ
+---from what WezTerm draws, which would box the text.
 ---@param  index integer
 ---@return fun(theme: table): table
 function M.accent(index)

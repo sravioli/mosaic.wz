@@ -17,6 +17,14 @@ local deps = require "mosaic.engine.deps"
 local renderer = require "mosaic.engine.renderer"
 local status = require "mosaic.engine.status"
 
+---Public API for mosaic.wz.
+---@class Mosaic.Api
+---@field VERSION string Plugin version.
+---@field budget Mosaic.Budget Width accounting shared with `format-tab-title` handlers.
+---@field cond Mosaic.Conditions Condition helpers for module `cond` fields.
+---@field modules table<string, Mosaic.Options.Module|function> Built-in modules by name, loaded on first use.
+---@field palette Mosaic.Palette Colour helpers used by the built-ins.
+---@field INTEGRATION_API integer Version of the integration contract.
 local M = {}
 
 M.VERSION = "0.1.0"
@@ -82,7 +90,7 @@ function M.remaining_width()
   return math.max(0, renderer.width.available - renderer.width.used)
 end
 
----Display width of `s` in columns (escape sequences ignored).
+---Visible width of `s` in columns (escape sequences ignored).
 ---@param  s string
 ---@return integer
 function M.width(s)
@@ -91,7 +99,7 @@ end
 
 ---Copy of a module padded by one column inside its icon/text, so the padding
 ---takes the module's style. For decorators whose shapes sit flush against
----the content; module `padding` itself is drawn unstyled.
+---the content. Module `padding` itself is drawn unstyled.
 ---@param  module table
 ---@return table
 function M.pad_inside(module)
@@ -99,7 +107,7 @@ function M.pad_inside(module)
 end
 
 ---Draw the new-tab button in the preset's style into `cfg.tab_bar_style`.
----`apply_to_config` calls it; call it again when the colour scheme changes.
+---`apply_to_config` calls it. Call it again when the colour scheme changes.
 ---@param cfg   table
 ---@param theme table colour scheme
 function M.set_new_tab_button(cfg, theme)
@@ -107,8 +115,8 @@ function M.set_new_tab_button(cfg, theme)
 end
 
 ---Redraw a window's overridden new-tab button. Window overrides survive
----config reloads and win over the config, so a button copied there (e.g. by
----a colour scheme switcher) would keep an old preset's look.
+---config reloads and win over the config. A button copied there (e.g. by a
+---colour scheme switcher) would otherwise keep an old preset's look.
 ---@param window table
 function M.refresh_new_tab_button(window)
   local overrides = window:get_config_overrides()
@@ -148,7 +156,7 @@ end
 M.INTEGRATION_API = require("mosaic.engine.integrations").API
 
 ---Integration names shipped by installed plugins, e.g. `{ "chord.hints" }`.
----Lists files only; nothing is read or executed.
+---Lists files only. Nothing is read or executed.
 ---@return string[]
 function M.discover()
   return require("mosaic.engine.integrations").discover()
@@ -192,11 +200,11 @@ function M.notify(window, text, opts)
   require("mosaic.engine.notice").notify(window, text, opts)
 end
 
----Log a report on dependencies, external programs, option issues, where
----each layout name resolves and what each module costs per frame, one line
----per log entry so the debug overlay shows it readably:
----`require("mosaic.api").doctor()`. Nothing is returned (the overlay would
----print a returned string quoted, with `\n` escapes); the text itself is
+---Log a report on dependencies, external programs, and option issues. It also
+---shows where each layout name resolves and what each module costs per frame.
+---Each line is one log entry, so the debug overlay shows it readably:
+---`require("mosaic.api").doctor()`. Nothing is returned, because the overlay
+---would print a returned string quoted, with `\n` escapes. The text itself is
 ---`require("mosaic.engine.doctor").report(window)`.
 ---@param window? table GUI window (default: the first one)
 function M.doctor(window)

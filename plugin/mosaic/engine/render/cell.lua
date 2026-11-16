@@ -20,7 +20,7 @@ local str = warp.string ---@class Warp.String
 local raw_cw = wt.column_width
 local find = string.find
 
--- Live options table; `mosaic.config.setup()` updates it in place.
+-- Live options table. `mosaic.config.setup()` updates it in place.
 local Opts = require("mosaic.engine.config").live ---@class Mosaic.Options
 local log = require "mosaic.engine.logger"
 

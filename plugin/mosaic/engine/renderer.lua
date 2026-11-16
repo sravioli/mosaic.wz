@@ -9,7 +9,7 @@ local ribbon = deps.ribbon
 local warp = deps.warp
 local str = warp.string ---@class Warp.String
 
--- Live options table; `mosaic.config.setup()` updates it in place.
+-- Live options table. `mosaic.config.setup()` updates it in place.
 local Opts = require("mosaic.engine.config").live ---@class Mosaic.Options
 local log = require "mosaic.engine.logger"
 
