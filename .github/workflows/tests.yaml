@@ -8,6 +8,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }} ${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -21,13 +24,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # The spec mock loads warp, log, warden, sigil and ribbon from ../<name>.wz,
-      # pinned so a change there cannot turn this repo's CI red.
       - name: Checkout sibling plugins
         run: |
-          while read -r name sha; do
+          while read -r name ref; do
             git init -q "../$name.wz"
-            git -C "../$name.wz" fetch -q --depth 1 "https://github.com/sravioli/$name.wz" "$sha"
+            git -C "../$name.wz" fetch -q --depth 1 "https://github.com/sravioli/$name.wz" "$ref"
             git -C "../$name.wz" checkout -q FETCH_HEAD
           done <<'EOF'
           warp c4dda3a21995cb4a146d416af19291c7e029a095
@@ -60,8 +61,8 @@ jobs:
       - name: Print coverage summary
         run: tail -n 15 luacov.report.out
 
+      # Coverage upload is informational; an outage at Coveralls must not fail CI.
       - name: Submit to Coveralls
-        if: success()
         continue-on-error: true
         run: luacov-coveralls --service-name github-actions --verbose
         env:
