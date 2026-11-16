@@ -22,6 +22,12 @@ mosaic.setup { preset = assert(os.getenv "MOSAIC_PRESET"), position = "top" }
 require("mosaic.engine.system").cpu()
 
 local config = wezterm.config_builder()
+-- A Nerd Font first, so glyphs (tab numbers, icons) take its size, not the
+-- fallback font's.
+config.font = wezterm.font_with_fallback {
+  os.getenv "MOSAIC_FONT" or "FiraCode Nerd Font",
+  "Symbols Nerd Font",
+}
 config.font_size = tonumber(os.getenv "MOSAIC_FONT_SIZE") or 16
 config.initial_cols = tonumber(os.getenv "MOSAIC_COLS") or 140
 config.initial_rows = 1 -- the bar plus one row; the script keeps only the bar

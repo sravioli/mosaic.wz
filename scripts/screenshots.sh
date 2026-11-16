@@ -9,8 +9,9 @@
 #   scripts/screenshots.sh                 # every preset
 #   scripts/screenshots.sh pure bubbles    # only these
 #
-# Settings (environment): MOSAIC_FONT_SIZE (16), MOSAIC_COLS (140), MOSAIC_CWD (home), MOSAIC_DELAY (seconds to wait for the window, default 5)
-# the window, default 3).
+# Settings (environment): MOSAIC_FONT ("FiraCode Nerd Font"), MOSAIC_FONT_SIZE
+# (16), MOSAIC_COLS (140), MOSAIC_CWD (home), MOSAIC_DELAY (seconds to wait for
+# the window, default 5).
 #
 # The shot is the bar row of the window at its real pixel size (the window is
 # the bar plus one row, so the bar is its top half). Large text keeps it sharp when
