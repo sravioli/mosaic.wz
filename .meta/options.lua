@@ -1,0 +1,205 @@
+---@meta mosaic.options
+error "cannot require a meta file!"
+
+-- luacheck: push ignore 631 (line is too long)
+
+---@alias Mosaic.Module.ConditionChecker fun(window: Window, pane: Pane): boolean
+---@alias Mosaic.Module.ValueProvider     fun(window: Window, pane: Pane): string
+
+---Status bar configuration options.
+---Covers layout, refresh cadence, and module styling.
+---
+---@class Mosaic.Options
+---@field public enabled?  boolean                                Enable the status bar.
+---@field public position? "top"|"bottom"                         Screen position of status bar.
+---@field public preset?   string                                 Preset supplying the default layout and modules (`powerline`, `minimal`, `bubbles`, `slanted`, `slanted-inverted`, `blocks`, `brackets`, `pure`).
+---@field public flexible? boolean                                Allow the status bar to shrink when space is tight.
+---@field public fit?      Mosaic.Options.Fit                     Strategy used to fit module groups into the available width.
+---@field public layout?   Mosaic.Options.Layout|fun(window: Window, pane: Pane): Mosaic.Options.Layout                  Structural arrangement of status bar components.
+---@field public modules?  Mosaic.Modules                 Collection of module-specific configurations.
+---@field public tabs?     false|Mosaic.Options.Tabs      Tab styling; `false` leaves `format-tab-title` to you.
+---@field public options?  table<string, Mosaic.Options.Module> Per-module options by name; integrations receive theirs too.
+---@field public style?    Mosaic.Options.Style           Colours and separators the preset applies.
+---@field public decorate? fun(spec: Mosaic.Module, ctx: table): Mosaic.Module Replace the preset's decorator.
+---@field public scheme?   string|table                   Take the palette from another colour scheme; the bar keeps the active background.
+---@field public center?   { anchor?: "window"|"free", overflow?: "shift"|"hide", margin?: integer } Where `layout.center` sits.
+---
+---`1`-`8` theme.ansi, `9`-`16` theme.brights, "foreground"/"background", a colour, or fun(theme).
+---@alias Mosaic.Color integer|string|fun(theme: table): string
+---
+---@class Mosaic.Options.Style
+---@field public colors?     table<string, Mosaic.Color>       Module colour by name.
+---@field public separators? { left?: string, right?: string, between?: string } Glyphs before / after a module, and between a group's modules.
+---@field public raw?        string[] Module names drawn plain: colour on the bar background, no separators.
+---@field public text?       Mosaic.Color                      Text on filled modules (default "background").
+---@field public dim?        Mosaic.Color                      Muted text and glyphs (default 9).
+---@field public gradient?   { base?: Mosaic.Color, stops?: number[] } Powerline's right-side gradient.
+---@field public by_mode?    table<string, Mosaic.Options.Style> Merged in while that key table (or "leader") is active.
+---
+---Merged into the module's spec each frame; other keys are read by the module.
+---@class Mosaic.Options.Module
+---@field public enabled?  boolean
+---@field public cond?     boolean|Mosaic.Module.ConditionChecker
+---@field public icon?     false|string|Mosaic.Module.Icon
+---@field public text?     false|string|Mosaic.Module.Text
+---@field public accent?   Mosaic.Color
+---@field public padding?  number|{ left: number, right: number }
+---@field public can_hide? boolean
+---@field public priority? number
+---@field public min_text? integer
+---@field public style?    Mosaic.Module.Styler
+---@field public sep?      Mosaic.Module.Sep
+---@field public update?   number|{ interval?: number, key?: fun(window: Window, pane: Pane): any }|fun(window: Window, pane: Pane): any|false
+---@field public fmt?      fun(text: string, window: Window, pane: Pane): string Formats the text and every variant.
+---@field public format?   string   clock: strftime format.
+---@field public variants? string[] clock: shorter strftime formats, longest first.
+---@field public git_root? boolean  cwd: `false` shows the directory itself inside a repository.
+---@field public home?     string   cwd/parent: replaces the home directory, e.g. "~".
+---@field public aliases?  { pattern: string, replacement: string }[] cwd/parent: path rewrites, applied first.
+---@field public max_length? integer cwd/parent/media: cut past this width.
+---@field public full?     boolean  parent: the whole parent path.
+---@field public icons?    table|false clock: hour glyphs (false: none); process/domain: glyph map.
+---@field public icon_only? boolean process: the glyph without the name.
+---@field public show_local? boolean domain: show the local domain too.
+---@field public all?      boolean  battery: every battery.
+---@field public time?     boolean  battery: time to empty / full.
+---@field public levels?   table<integer, Mosaic.Color> battery: state colour at or below a charge.
+---@field public charging? Mosaic.Color battery: state colour while charging or full.
+---@field public error_color? Mosaic.Color progress: colour of an error state.
+---@field public modes?    table<string, { text?: string, icon?: string|false, color?: Mosaic.Color }> mode: per key table.
+---@field public interval? number   git/kube/media: seconds between reads.
+---@field public detached? boolean  git: false hides a detached HEAD.
+---@field public path?     string   kube: kubeconfig file.
+---@field public namespace? boolean kube: false hides the namespace.
+---@field public players?  string[] media: playerctl players.
+---@field public paused?   boolean  media: show paused tracks too.
+---
+---Descriptor returned by `plugin/<plugin>/mosaic/<module>.lua`.
+---@class Mosaic.Integration
+---@field public api     integer                                     Must equal `mosaic.INTEGRATION_API`.
+---@field public events? string[]                                    Events that refresh the bar.
+---@field public new     fun(opts: table, mosaic: table): Mosaic.Module|function Build the module once per config evaluation.
+---@field public notices? table<string, string|fun(window: Window, ...): string?> Event -> message shown with mosaic.notify.
+---
+---@class Mosaic.Options.Tabs
+---@field public title?  fun(tab: table, max_cells: integer): string Title text; the preset draws the rest.
+---@field public format? fun(ctx: Mosaic.TabContext): table[]       Whole cell as `{ bg, fg, text, attributes }` segments.
+---@field public new_tab? fun(ctx: { theme: table, config: table, hover: boolean, state: string, style: table }): table[] New-tab button as segments.
+---@field public style?  Mosaic.Options.Tabs.Style                 Look of the presets' tabs and new-tab button.
+---@field public content? (string|table|fun(tab: table, ctx: Mosaic.TabContext): string?)[]|{ active?: table, inactive?: table } Tab text from components.
+---@field public rules?  Mosaic.Options.Tabs.Rule[]                Per-tab style and icon, in order.
+---@field public badges? true|Mosaic.Options.Tabs.Badges     Badges for tabs that need you.
+---
+---@alias Mosaic.Options.Tabs.Match string|{ pattern: string }|fun(value: string): boolean
+---
+---@class Mosaic.Options.Tabs.Rule
+---@field public match  { domain?: Mosaic.Options.Tabs.Match, cwd?: Mosaic.Options.Tabs.Match, process?: Mosaic.Options.Tabs.Match, title?: Mosaic.Options.Tabs.Match, user_var?: { name: string, value?: Mosaic.Options.Tabs.Match } }
+---@field public style? Mosaic.Options.Tabs.Style
+---@field public icon?  string|false For the `icon` component.
+---
+---@class Mosaic.Options.Tabs.Badge
+---@field public icon?   string
+---@field public color?  Mosaic.Color
+---@field public sticky? boolean Shown while set, not only until the tab is focused.
+---
+---@class Mosaic.Options.Tabs.Badges
+---@field public var?    string                                  User var holding the state (default "badge").
+---@field public states? table<string, Mosaic.Options.Tabs.Badge>
+---@field public bell?   boolean|Mosaic.Options.Tabs.Badge
+---@field public output? boolean|Mosaic.Options.Tabs.Badge
+---
+---@class Mosaic.Options.Notify
+---@field public seconds? number        How long the message shows (default 3).
+---@field public icon?    string|false
+---@field public accent?  Mosaic.Color
+---
+---@class Mosaic.Options.Tabs.Style
+---@field public colors?     table<string, Mosaic.Color>       `active`, `hover`, `inactive`, `text` (and `dim`, `head` where a preset reads them).
+---@field public index?      "number"|"number0"|"icon"|false|fun(tab: table, ctx: Mosaic.TabContext): string
+---@field public padding?    integer|{ left?: integer, right?: integer } Columns around the tab text.
+---@field public unseen?     string|false                      Replaces the index on unseen output.
+---@field public separators? { left?: string, right?: string } Tab edges.
+---@field public new_tab?    string                            New-tab button label.
+---
+---
+---Layout configuration for status bar sides.
+---@class Mosaic.Options.Layout
+---@field public left?  Mosaic.Options.Layout.Item[] List of module names for left-aligned section.
+---@field public center? Mosaic.Options.Layout.Item[] Modules drawn in the centre of the bar.
+---@field public right? Mosaic.Options.Layout.Item[] List of module names for right-aligned section.
+---
+---
+---@alias Mosaic.Options.Layout.Item
+---| (string | string[])
+---
+---
+---@alias Mosaic.Options.Fit
+---| "balanced"   # Shrink every group module to its minimum before hiding any; redistribute leftover by priority (default).
+---| "greedy"     # Left-to-right: each module takes the widest form that fits the remaining space.
+---| "exhaustive" # Try every combination; keep the one preserving the most information (visible modules, then texts shown, then fraction of each text).
+---
+---
+---@alias Mosaic.Modules
+---| table<string, (Mosaic.Module|Mosaic.Module.Creator|string)>
+---
+---
+---@alias Mosaic.Module.Creator
+---| fun(window: Window, pane: Pane, theme, config): Mosaic.Module
+---
+---
+---Configuration for one status bar module.
+---@class Mosaic.Module
+---@field public enabled?  boolean                                Enable this module.
+---@field public accent?   string|integer                         Colour hint for the preset (ignored with `style`).
+---@field public tint?     Mosaic.Color                           State colour: wins over `style.colors`, `accent` and position colours.
+---@field public cond?     boolean|Mosaic.Module.ConditionChecker   Whether the module is visible.
+---@field public icon?     Mosaic.Module.Icon             Icon displayed next to the text.
+---@field public text?     Mosaic.Module.Text             Text displayed next to the icon.
+---@field public sep?      Mosaic.Module.Sep              Separator displayed with the module.
+---@field public style?    Mosaic.Module.Styler           Module style.
+---@field public layout?   Mosaic.Module.Layout           Static or dynamic layout of the module.
+---@field public can_hide? boolean                                Whether the module may be hidden.
+---@field public priority? number                                 Group fitting: higher keeps extra width first and is hidden last (default 0; ties follow layout order).
+---@field public min_text? integer                                Group fitting: minimum text columns for a trimmed form to be used (default 5).
+---@field public padding?  number|{ left: number, right: number } Component padding.
+---
+---
+---@class Mosaic.Module.Component
+---@field public enabled? boolean                                    Whether the component is enabled.
+---@field public value?   string|Mosaic.Module.ValueProvider       Component string value to display.
+---@field public padding? number|{ left: number, right: number }     Component padding.
+---@field public style?   Mosaic.Module.Styler               Component style.
+---
+---@class Mosaic.Module.Icon: Mosaic.Module.Component
+---@field public position? "left"|"right"                         Icon position relative to the text.
+---
+---
+---@class Mosaic.Module.Text: Mosaic.Module.Component
+---@field public variants? (string|Mosaic.Module.ValueProvider)[] Group fitting: shorter alternatives to `value`, longest first.
+---@field public trim?     boolean                                       Group fitting: allow truncating the text with an ellipsis (default true).
+---
+---
+---@class Mosaic.Module.Sep : Mosaic.Module.Component
+---@field public invert_bg_fg? boolean                          Invert the global background and foreground for separators.
+---@field public value?        Mosaic.Module.Sep.Value
+---
+---
+---@alias Mosaic.Module.Layout
+---| string
+---| table
+---| Ribbon
+---| fun(ctx: Mosaic.Module.LayoutContext): string|table|Ribbon
+---
+---@alias Mosaic.Module.LayoutContext
+---| { layout: Ribbon.Api, theme: table, warp: Warp.Api, window: Window, pane: Pane }
+---
+---@alias Mosaic.Module.Styler
+---| { bg?: string, fg?: string, attributes?: string|string[] }
+---| fun(theme: table, parent_style?: { bg?: string, fg?: string, attributes?: string|string[] }): { bg?: string, fg?: string, attributes?: string|string[] }
+---
+---@alias Mosaic.Module.Sep.Value
+---| string
+---| { left: string, right: string }
+---| (fun(window: Window, pane: Pane): string|{ left: string, right: string })
+
+-- luacheck: pop
