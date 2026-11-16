@@ -29,7 +29,9 @@ done
 if [ $# -gt 0 ]; then
   presets=("$@")
 else
-  mapfile -t presets < <(cd "$repo/plugin/mosaic/presets" && ls -- *.lua | sed 's/\.lua$//')
+  presets=("$repo"/plugin/mosaic/presets/*.lua)
+  presets=("${presets[@]##*/}")
+  presets=("${presets[@]%.lua}")
 fi
 
 mkdir -p "$out/dark" "$out/light"
