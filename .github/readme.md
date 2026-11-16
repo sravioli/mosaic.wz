@@ -161,15 +161,16 @@ of them can be reproduced, or forked, in your own config.
 - [Usage](../docs/usage.md): customize without code, write modules, centre
   modules, per-window layouts, notices, editor support.
 - [Tabs](../docs/tabs.md): format, compose, rules and badges.
-- [Configuration](../docs/configuration.md): every option, colours, validation,
-  precedence and fitting.
-- [API reference](../docs/api.md): every function, method, and value, generated
-  from the LuaLS annotations.
 - [Modules](../docs/modules.md): module fields and the built-in modules.
 - [Integrations](../docs/integrations.md): modules shipped by other plugins,
   and how to write one.
 - [Troubleshooting](../docs/troubleshooting.md)
 - [Contributing](contributing.md): local checkout, checks, screenshots.
+
+> [!NOTE]
+> The full references are [`docs/configuration.md`](../docs/configuration.md)
+> (every option) and [`docs/api.md`](../docs/api.md) (every function, generated
+> from the LuaLS annotations).
 
 ## License
 
