@@ -1,6 +1,7 @@
 -- Minimal WezTerm config for `scripts/screenshots.sh`: one small window with
--- the bar of the preset named by $MOSAIC_PRESET, in the Kanagawa scheme named
--- by $MOSAIC_KANAGAWA ("wave" dark, "lotus" light). Settings come from the
+-- the bar of the preset named by $MOSAIC_PRESET, in the kanagawa scheme named
+-- by $MOSAIC_KANAGAWA ("wave" dark, "lotus" light) of the kanagawa plugin
+-- (https://github.com/kanagawa-community/wezterm). Settings come from the
 -- environment so the script stays the only place that knows the defaults.
 local wezterm = require "wezterm"
 
@@ -12,7 +13,7 @@ for _, name in ipairs { "warp", "log", "warden", "sigil", "ribbon" } do
 end
 package.path = repo .. "/plugin/?.lua;" .. repo .. "/plugin/?/init.lua;" .. package.path
 
-wezterm.plugin.require "https://github.com/kanagawa-community/wezterm"
+local kanagawa = wezterm.plugin.require "https://github.com/kanagawa-community/wezterm"
 
 local mosaic = require "mosaic.api"
 mosaic.setup { preset = assert(os.getenv "MOSAIC_PRESET"), position = "top" }
@@ -41,7 +42,7 @@ config.tab_max_width = 24
 config.check_for_updates = false
 -- The scheme first: mosaic draws the new-tab button in the scheme set when it
 -- is applied.
-require("kanagawa.api").apply_to_config(config, { scheme = os.getenv "MOSAIC_KANAGAWA" or "wave" })
+kanagawa.apply_to_config(config, { scheme = os.getenv "MOSAIC_KANAGAWA" or "wave" })
 mosaic.apply_to_config(config)
 
 -- Three tabs, so the preset's active, inactive and hover looks all show.

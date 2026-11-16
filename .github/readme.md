@@ -77,8 +77,7 @@ right.
 
 ## Pick a preset
 
-Set `preset` to one of these names. The screenshots show Kanagawa Wave (dark) and
-Kanagawa Lotus (light), in Fira Code Nerd Font.
+Set `preset` to one of these names. The screenshots show [kanagawa-wave](https://github.com/kanagawa-community/wezterm) (dark) and [kanagawa-lotus](https://github.com/kanagawa-community/wezterm) (light), in Fira Code Nerd Font.
 
 ### `powerline`
 

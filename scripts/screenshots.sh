@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Take screenshots of the bar per preset, dark (Kanagawa Wave) and light
-# (Kanagawa Lotus): .github/assets/presets/{dark,light}/<preset>.png.
+# Take screenshots of the bar per preset, dark (kanagawa-wave) and light
+# (kanagawa-lotus) from the kanagawa plugin
+# (https://github.com/kanagawa-community/wezterm):
+# .github/assets/presets/{dark,light}/<preset>.png.
 #
 # Needs KDE Plasma (spectacle) and wezterm; oxipng is used when installed.
 # Run it from a session you leave alone: each shot opens a window that must
