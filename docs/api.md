@@ -690,7 +690,7 @@ _Returns:_
 ### mosaic.palette.stops
 
 ```lua
-mosaic.palette.stops(theme: table, n?: integer, gradient?: { base: (string|integer)?, stops: number[]? }) -> palette: string[], text_fg: string
+mosaic.palette.stops(theme: table, n?: integer, gradient?: Mosaic.Gradient) -> palette: string[], text_fg: string
 ```
 
 `n`-stop gradient, darkest first. `gradient.base` is the colour it starts
@@ -703,7 +703,7 @@ computation.
 
 - `theme` (`table`)
 - `n` (`integer`, optional): stops wanted (default 4)
-- `gradient` (`{ base: (string|integer)?, stops: number[]? }`, optional)
+- `gradient` (`Mosaic.Gradient`, optional): the `gradient` argument of `mosaic.palette.stops`.
 
 _Returns:_
 
@@ -737,7 +737,7 @@ _Returns:_
 ### mosaic.palette.tab
 
 ```lua
-mosaic.palette.tab(ctx: table, defaults: { colors: table, separators: table?, index: any, unseen: (string|false)?, new_tab: string? }) -> table
+mosaic.palette.tab(ctx: table, defaults: Mosaic.TabDefaults) -> table
 ```
 
 Tab look for a preset's `format` / `new_tab`: the user's `tabs.style`
@@ -754,7 +754,7 @@ Returns a table with these keys:
 **Parameters:**
 
 - `ctx` (`table`): tab or new-tab context
-- `defaults` (`{ colors: table, separators: table?, index: any, unseen: (string|false)?, new_tab: string? }`)
+- `defaults` (`Mosaic.TabDefaults`): the `defaults` argument of `mosaic.palette.tab`: a preset's tab look.
 
 _Returns:_
 
@@ -836,6 +836,27 @@ _Returns:_
 
 [Back to top](#mosaicwz-api-reference)
 
+### Mosaic.Gradient
+
+The `gradient` argument of `mosaic.palette.stops`.
+
+Fields:
+
+- `base` (`string|integer`, optional): colour it starts from (default `ansi[5]`)
+- `stops` (`number[]`, optional): lighten (+) / darken (-) offsets
+
 ### Mosaic.Options
 
 Live options table. `mosaic.config.setup()` updates it in place.
+
+### Mosaic.TabDefaults
+
+The `defaults` argument of `mosaic.palette.tab`: a preset's tab look.
+
+Fields:
+
+- `colors` (`table`)
+- `separators` (`table`, optional)
+- `index` (`any`)
+- `unseen` (`string|false`, optional)
+- `new_tab` (`string`, optional)

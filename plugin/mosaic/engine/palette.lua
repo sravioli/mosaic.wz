@@ -84,6 +84,11 @@ local _key, _bg_key, _n, _offsets, _palette, _text_fg
 -- The classic four stops; longer groups stretch evenly over the same range.
 local FOUR = { -0.15, 0, 0.15, 0.25 }
 
+---The `gradient` argument of `mosaic.palette.stops`.
+---@class Mosaic.Gradient
+---@field base?  integer|string colour it starts from (default `ansi[5]`)
+---@field stops? number[] lighten (+) / darken (-) offsets
+
 ---`n`-stop gradient, darkest first. `gradient.base` is the colour it starts
 ---from (default `ansi[5]`) and `gradient.stops` the lighten (+) / darken (-)
 ---offsets. Groups longer than the offsets stretch over their range. Cached on
@@ -91,7 +96,7 @@ local FOUR = { -0.15, 0, 0.15, 0.25 }
 ---computation.
 ---@param  theme     table
 ---@param  n?        integer stops wanted (default 4)
----@param  gradient? { base?: integer|string, stops?: number[] }
+---@param  gradient? Mosaic.Gradient
 ---@return string[] palette
 ---@return string   text_fg foreground for text inside palette cells
 function M.stops(theme, n, gradient)
@@ -146,6 +151,14 @@ function M.color(ctx, spec)
   return M.resolve(ctx.theme, c)
 end
 
+---The `defaults` argument of `mosaic.palette.tab`: a preset's tab look.
+---@class Mosaic.TabDefaults
+---@field colors      table
+---@field separators? table
+---@field index?      any
+---@field unseen?     string|false
+---@field new_tab?    string
+
 ---Tab look for a preset's `format` / `new_tab`: the user's `tabs.style`
 ---over the preset's `defaults`.
 ---
@@ -157,7 +170,7 @@ end
 --- - `index`: the tab's index text, or the unseen marker
 --- - `label`: the new-tab button text
 ---@param  ctx      table tab or new-tab context
----@param  defaults { colors: table, separators?: table, index?: any, unseen?: string|false, new_tab?: string }
+---@param  defaults Mosaic.TabDefaults
 ---@return table
 function M.tab(ctx, defaults)
   local user = ctx.style or {}
