@@ -1,0 +1,74 @@
+---
+name: tests
+run-name: Run tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }} ${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    name: Busted tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The spec mock loads warp, log, warden, sigil and ribbon from ../<name>.wz,
+      # pinned so a change there cannot turn this repo's CI red.
+      - name: Checkout sibling plugins
+        run: |
+          while read -r name sha; do
+            git init -q "../$name.wz"
+            git -C "../$name.wz" fetch -q --depth 1 "https://github.com/sravioli/$name.wz" "$sha"
+            git -C "../$name.wz" checkout -q FETCH_HEAD
+          done <<'EOF'
+          warp c4dda3a21995cb4a146d416af19291c7e029a095
+          log dfbbf0683b6112ec0f4b9a208e1edcae10594de9
+          warden cc583187d78cebb7f4eb4fbb1bada5b069026376
+          sigil 8a0e2a9d4d968fe6600469e5e5564fd0d3806948
+          ribbon e91fce424630d785af85189c9b5205c5ed55dec3
+          EOF
+
+      - name: Install Lua
+        uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: "5.4"
+
+      - name: Install LuaRocks
+        uses: leafo/gh-actions-luarocks@v4
+
+      - name: Install dependencies
+        run: |
+          luarocks install busted
+          luarocks install luacov
+          luarocks install luacov-coveralls
+
+      - name: Run tests
+        run: busted --verbose --coverage
+
+      - name: Generate coverage report
+        run: luacov
+
+      - name: Print coverage summary
+        run: tail -n 15 luacov.report.out
+
+      - name: Submit to Coveralls
+        if: success()
+        continue-on-error: true
+        run: luacov-coveralls --service-name github-actions --verbose
+        env:
+          COVERALLS_REPO_TOKEN: ${{ github.token }}
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: luacov.report.out
