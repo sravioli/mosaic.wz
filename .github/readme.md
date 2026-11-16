@@ -1,6 +1,7 @@
 # mosaic.wz [![Release](https://img.shields.io/github/v/release/sravioli/mosaic.wz?style=flat&label=Release&logo=github)](https://github.com/sravioli/mosaic.wz/releases/latest)
 
 <!-- [![Awesome](https://awesome.re/mentioned-badge.svg)](https://github.com/michaelbrusegard/awesome-wezterm) -->
+
 [![Tests](https://img.shields.io/github/actions/workflow/status/sravioli/mosaic.wz/tests.yaml?style=flat&label=Tests&logo=githubactions)](https://github.com/sravioli/mosaic.wz/actions/workflows/tests.yaml)
 [![Lint](https://img.shields.io/github/actions/workflow/status/sravioli/mosaic.wz/lint.yaml?style=flat&label=Lint&logo=githubactions)](https://github.com/sravioli/mosaic.wz/actions/workflows/lint.yaml)
 [![Coverage](https://img.shields.io/coverallsCoverage/github/sravioli/mosaic.wz?style=flat&label=Coverage&logo=coveralls)](https://coveralls.io/github/sravioli/mosaic.wz)
@@ -16,7 +17,6 @@ working bar in two lines, or write your own modules: static tables or
 functions called on every repaint, with conditions, styles, separators,
 fitting strategies and per-module refresh caching, much like heirline.nvim
 components.
-
 
 [Quick start](#quick-start) · [Usage](#usage) · [Configuration](#configuration) · [API reference](#api-reference) · [Integrations](#integrations) · [Troubleshooting](#troubleshooting) · [Development](#development) · [License](#license)
 
@@ -79,47 +79,80 @@ right.
 
 ### Pick a preset
 
-Set `preset` to one of these names.
+Set `preset` to one of these names. The screenshots show Kanagawa Wave (dark) and
+Kanagawa Lotus (light), in Fira Code Nerd Font.
 
 #### `powerline`
 
 Coloured pills on the left, a powerline gradient on the right, slanted numbered tabs.
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/presets/light/powerline.png">
+  <img src="assets/presets/dark/powerline.png" alt="The powerline preset" width="1400">
+</picture>
 
 #### `minimal`
 
 Accent-coloured text on the bar background, no separators; plain numbered tabs.
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/presets/light/minimal.png">
+  <img src="assets/presets/dark/minimal.png" alt="The minimal preset" width="1400">
+</picture>
 
 #### `bubbles`
 
 Every module and tab is a rounded pill.
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/presets/light/bubbles.png">
+  <img src="assets/presets/dark/bubbles.png" alt="The bubbles preset" width="1400">
+</picture>
 
 #### `slanted`
 
 Every module and tab is a block with slanted edges (`/ … /`); the outermost modules stay flat against the window.
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/presets/light/slanted.png">
+  <img src="assets/presets/dark/slanted.png" alt="The slanted preset" width="1400">
+</picture>
 
 #### `slanted-inverted`
 
 `slanted`, leaning the other way (`\ … \`).
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/presets/light/slanted-inverted.png">
+  <img src="assets/presets/dark/slanted-inverted.png" alt="The slanted-inverted preset" width="1400">
+</picture>
 
 #### `blocks`
 
 Flat blocks one column apart, with no separator glyphs.
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/presets/light/blocks.png">
+  <img src="assets/presets/dark/blocks.png" alt="The blocks preset" width="1400">
+</picture>
 
 #### `brackets`
 
 Accent-coloured text in dim `[ ]` on the bar background, with ASCII separators.
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/presets/light/brackets.png">
+  <img src="assets/presets/dark/brackets.png" alt="The brackets preset" width="1400">
+</picture>
 
 #### `pure`
 
 Dim text with each icon in its accent colour, no backgrounds or separator glyphs, as in the pure prompt.
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/presets/light/pure.png">
+  <img src="assets/presets/dark/pure.png" alt="The pure preset" width="1400">
+</picture>
 
 Each preset supplies a layout, styles every module and tab, and draws the
 new-tab button to match. Presets are built only from the public API, so any
@@ -576,7 +609,7 @@ All module calls use `.`, not `:`.
 | `mosaic.remaining_width() → integer`       | Free columns in the side being rendered, inside module functions.                                                                                                                                                                                                                                              |
 | `mosaic.width(s) → integer`                | Display width in columns, escape sequences ignored.                                                                                                                                                                                                                                                            |
 | `mosaic.pad_inside(module) → table`        | Copy with one column of padding inside its icon/text, in their style.                                                                                                                                                                                                                                          |
-| `mosaic.copy(t) → table` | Shallow copy of a table, e.g. a module spec a decorator restyles. |
+| `mosaic.copy(t) → table`                   | Shallow copy of a table, e.g. a module spec a decorator restyles.                                                                                                                                                                                                                                              |
 | `mosaic.set_new_tab_button(config, theme)` | Redraw the new-tab button; call it when you switch colour scheme at runtime.                                                                                                                                                                                                                                   |
 | `mosaic.refresh_new_tab_button(window)`    | Redraw a button kept in window overrides; registered on `window-config-reloaded`.                                                                                                                                                                                                                              |
 | `mosaic.discover() → string[]`             | Integration names your loaded plugins ship; reads no file.                                                                                                                                                                                                                                                     |
@@ -760,6 +793,14 @@ local mosaic = require "mosaic.api"
 
 Dependencies must remain available through the loader or `package.path`;
 the specs use sibling checkouts in `../<name>.wz`.
+
+### Screenshots
+
+`scripts/screenshots.sh` takes the preset screenshots into
+`.github/assets/presets/{dark,light}/`. It needs KDE Plasma (`spectacle`) and
+WezTerm, opens one small window per shot, so leave the desktop alone while it
+runs. Pass preset names to shoot only those; the settings are documented at
+the top of the script.
 
 ### Editor support
 
