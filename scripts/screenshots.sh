@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Take screenshots of the bar per preset, dark (Kanagawa Wave) and light
-# (Kanagawa Lotus): .github/assets/<preset>-dark.png and <preset>-light.png.
+# (Kanagawa Lotus): .github/assets/presets/{dark,light}/<preset>.png.
 #
 # Needs KDE Plasma (spectacle) and wezterm; oxipng is used when installed.
 # Run it from a session you leave alone: each shot opens a window that must
@@ -18,7 +18,7 @@
 set -euo pipefail
 
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-out="$repo/.github/assets"
+out="$repo/.github/assets/presets"
 delay=${MOSAIC_DELAY:-5}
 
 for tool in wezterm spectacle; do
@@ -31,10 +31,10 @@ else
   mapfile -t presets < <(cd "$repo/plugin/mosaic/presets" && ls -- *.lua | sed 's/\.lua$//')
 fi
 
-mkdir -p "$out"
+mkdir -p "$out/dark" "$out/light"
 export MOSAIC_REPO="$repo"
 
-shoot() { # preset kanagawa-scheme file-name
+shoot() { # preset kanagawa-scheme subfolder
   local tmp w h ok=
   tmp=$(mktemp --suffix=.png)
   for attempt in 1 2 3; do
@@ -53,18 +53,18 @@ shoot() { # preset kanagawa-scheme file-name
       ok=1
       break
     fi
-    echo "$3: wrong window captured (attempt $attempt), retrying" >&2
+    echo "$3/$1: wrong window captured (attempt $attempt), retrying" >&2
   done
   if [ -n "$ok" ]; then
-    magick "$tmp" -gravity North -crop 100%x50%+0+0 +repage "$out/$3.png"
-    command -v oxipng >/dev/null && oxipng -q -o4 --strip all "$out/$3.png"
-    echo "$out/$3.png"
+    magick "$tmp" -gravity North -crop 100%x50%+0+0 +repage "$out/$3/$1.png"
+    command -v oxipng >/dev/null && oxipng -q -o4 --strip all "$out/$3/$1.png"
+    echo "$out/$3/$1.png"
   fi
   rm -f "$tmp"
-  [ -n "$ok" ] || { echo "$3: never got the focus; click away and rerun" >&2; exit 1; }
+  [ -n "$ok" ] || { echo "$3/$1: never got the focus; click away and rerun" >&2; exit 1; }
 }
 
 for preset in "${presets[@]}"; do
-  shoot "$preset" wave "$preset-dark"
-  shoot "$preset" lotus "$preset-light"
+  shoot "$preset" wave dark
+  shoot "$preset" lotus light
 done
