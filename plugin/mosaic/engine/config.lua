@@ -159,47 +159,29 @@ function M.option(name)
   return type(opts) == "table" and opts or {}
 end
 
----Validate `opts`, dropping invalid top-level fields.
+---Validate `opts`, dropping only the values that fail. warden copies just the
+---tables along a dropped path, so module tables keep their identity.
 ---@param  opts table
 ---@return table valid  validated scalars (layout/modules are taken from `opts` as-is)
+---@return table raw    `opts` without the dropped values
 local function validate(opts)
-  local work = {}
-  for k, v in pairs(opts) do
-    work[k] = v
-  end
-  local result = M.schema:safe_parse(work)
+  local result = M.schema:safe_parse(opts, { drop_invalid = true })
+  local dropped = result.dropped or {}
   -- Kept for mosaic.doctor().
   M.issues = {}
-  for _, list in ipairs { result.issues or {}, result.warnings or {} } do
+  for _, list in ipairs { dropped, result.issues or {}, result.warnings or {} } do
     for _, issue in ipairs(list) do
       M.issues[#M.issues + 1] = ("[%s] %s"):format(issue.path_text or "?", issue.message or "?")
     end
   end
-  if not result.ok or #result.warnings > 0 then
+  if #dropped > 0 or not result.ok or #result.warnings > 0 then
     result:log()
-  end
-  for _ = 1, 8 do
-    if result.ok then
-      break
-    end
-    local removed = false
-    for _, issue in ipairs(result.issues or {}) do
-      local key = issue.path and issue.path[1]
-      if key ~= nil and work[key] ~= nil then
-        work[key] = nil
-        removed = true
-      end
-    end
-    if not removed then
-      break
-    end
-    result = M.schema:safe_parse(work)
   end
   if not result.ok then
     log:error "invalid mosaic options; using defaults"
     return M.schema:safe_parse({}).value, {}
   end
-  return result.value, work
+  return result.value, result.input or opts
 end
 
 ---Load a preset by name.
