@@ -31,11 +31,11 @@ jobs:
             git -C "../$name.wz" fetch -q --depth 1 "https://github.com/sravioli/$name.wz" "$ref"
             git -C "../$name.wz" checkout -q FETCH_HEAD
           done <<'EOF'
-          warp c4dda3a21995cb4a146d416af19291c7e029a095
-          log dfbbf0683b6112ec0f4b9a208e1edcae10594de9
-          warden 07115f3311d29a95ec27bad29140f1385e6acbfd
-          sigil 8a0e2a9d4d968fe6600469e5e5564fd0d3806948
-          ribbon e91fce424630d785af85189c9b5205c5ed55dec3
+          warp 52a307aa46bbcaebadde78720c78519c1c6006c1
+          log e0f0740364aa6345b7f1e5f18d49a79e985c2954
+          warden cf2e98982709459d52324c3b60d263e57ff1f107
+          sigil dd4e336b5f0c4797a23070c2705d945cb6a5e500
+          ribbon 50c112ea616f07b2d582a7f7e48ca20e6a026494
           EOF
 
       - name: Install Lua
