@@ -74,6 +74,22 @@ describe("status-bar renderer", function()
     local warp = {
       string = {
         width = visible_width,
+        -- Same contract as warp.string.truncate_right: keep the left side in
+        -- whole display columns, then an ellipsis.
+        truncate_right = function(value, budget)
+          if visible_width(value) <= budget then
+            return value
+          end
+          local out, used = {}, 0
+          for cp in value:gmatch "[^\128-\191][\128-\191]*" do
+            local w = visible_width(cp)
+            if used + w + 1 > budget then
+              break
+            end
+            out[#out + 1], used = cp, used + w
+          end
+          return table.concat(out) .. "…"
+        end,
         pad = function(value, padding)
           value = tostring(value or "")
           local left, right

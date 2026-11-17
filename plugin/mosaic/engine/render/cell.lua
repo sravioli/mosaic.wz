@@ -18,7 +18,6 @@ local str = warp.string ---@class Warp.String
 -- icons, separators, padding, and resolved node values. Use str.width for
 -- strings that may contain ANSI codes, such as resolve_layout output.
 local raw_cw = wt.column_width
-local find = string.find
 
 -- Live options table. `mosaic.config.setup()` updates it in place.
 local Opts = require("mosaic.engine.config").live ---@class Mosaic.Options
@@ -45,30 +44,13 @@ end
 
 ---@param s        string
 ---@param max_cols integer
----@param ellipsis? string
 ---@return string
-local function truncate(s, max_cols, ellipsis)
-  ellipsis = ellipsis or "…"
+local function truncate(s, max_cols)
   if max_cols <= 0 then
     return ""
   end
-  local width = (find(s, "\27", 1, true) or find(ellipsis, "\27", 1, true)) and str.width
-    or visible_width
-  if width(s) <= max_cols then
-    return s
-  end
-
-  local ew = width(ellipsis)
-  local result, w = {}, 0
-  for cp in s:gmatch "[^\128-\191][\128-\191]*" do
-    local cpw = width(cp)
-    if w + cpw + ew > max_cols then
-      break
-    end
-    result[#result + 1] = cp
-    w = w + cpw
-  end
-  return table.concat(result) .. ellipsis
+  -- warp cuts with WezTerm's native, column-aware truncation.
+  return str.truncate_right(s, max_cols)
 end
 
 -- ---------------------------------------------------------------------------
