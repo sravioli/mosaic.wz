@@ -310,7 +310,7 @@ describe("process icons", function()
     assert.equal(sigil.icon("nvim", { fallback = false }), icons.process "nvim")
     assert.equal("N", icons.process("nvim", { nvim = "N" }))
     assert.is_nil(icons.process("nvim", { nvim = false }))
-    assert.equal(icons.PROCESS_DEFAULT, icons.process "no-such-program")
+    assert.equal(icons.symbol "Process", icons.process "no-such-program")
   end)
 end)
 

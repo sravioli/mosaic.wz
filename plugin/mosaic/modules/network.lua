@@ -6,20 +6,16 @@
 ---hidden on Windows.
 
 local cell = require "mosaic.modules.cell"
+local icons = require "mosaic.engine.icons"
 local system = require "mosaic.engine.system"
-local wezterm = require "wezterm"
 
 return function()
   if not system.supported() then
     return { enabled = false }
   end
   local down, up = system.network()
-  local text = ("%s %s %s"):format(
-    system.rate(down),
-    wezterm.nerdfonts.md_upload or "",
-    system.rate(up)
-  )
-  local module = cell("md_download", text, { interval = 2 })
+  local text = ("%s %s %s"):format(system.rate(down), icons.symbol "Status.upload", system.rate(up))
+  local module = cell("Status.download", text, { interval = 2 })
   module.text.variants = { system.rate(down) }
   return module
 end

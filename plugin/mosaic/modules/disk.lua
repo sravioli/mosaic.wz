@@ -11,5 +11,5 @@ return function()
   if not system.supported() then
     return { enabled = false }
   end
-  return cell("md_harddisk", system.percent(system.disk()), { interval = 30 })
+  return cell("Status.disk", system.percent(system.disk()), { interval = 30 })
 end

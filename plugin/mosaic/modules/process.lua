@@ -18,7 +18,7 @@ return function(_, pane)
   end
   local opts = config.option "process"
   local name = fs.basename(path):gsub("%.exe$", "")
-  local spec = cell("md_console", name)
+  local spec = cell("Process", name)
   local glyph = icons.process(name, opts.icons)
   spec.icon.enabled = glyph ~= nil and glyph ~= ""
   spec.icon.value = glyph or ""

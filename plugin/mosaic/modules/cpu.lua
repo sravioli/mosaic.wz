@@ -11,5 +11,5 @@ return function()
   if not system.supported() then
     return { enabled = false }
   end
-  return cell("md_cpu_64_bit", system.percent(system.cpu()), { interval = 3 })
+  return cell("Status.cpu", system.percent(system.cpu()), { interval = 3 })
 end

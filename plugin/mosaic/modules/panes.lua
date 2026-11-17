@@ -15,5 +15,5 @@ return function(window)
   if n <= 1 then
     return { enabled = false }
   end
-  return cell("md_view_split_vertical", tostring(n))
+  return cell("Status.panes", tostring(n))
 end

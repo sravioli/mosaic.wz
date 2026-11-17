@@ -13,24 +13,29 @@
 ---survive config reloads. A non-sticky state shows on an inactive tab until
 ---you focus it; a sticky one (working, waiting) shows while it is set.
 
-local wezterm = require "wezterm"
-
 local config = require "mosaic.engine.config"
-
-local nf = wezterm.nerdfonts
+local icons = require "mosaic.engine.icons"
 
 local M = {}
 
-M.DEFAULTS = {
-  var = "badge",
-  bell = { icon = nf.md_bell_ring, color = 4 },
-  output = false,
-  states = {
-    working = { icon = nf.md_robot, color = 6, sticky = true },
-    done = { icon = nf.md_check, color = 3 },
-    waiting = { icon = nf.md_alert_circle, color = 2, sticky = true },
-  },
-}
+local DEFAULTS
+
+---Default badges, built on first use so sigil loads only when badges are on.
+---@return table
+function M.defaults()
+  DEFAULTS = DEFAULTS
+    or {
+      var = "badge",
+      bell = { icon = icons.symbol "Badge.bell", color = 4 },
+      output = false,
+      states = {
+        working = { icon = icons.symbol "Badge.working", color = 6, sticky = true },
+        done = { icon = icons.symbol "Badge.done", color = 3 },
+        waiting = { icon = icons.symbol "Badge.waiting", color = 2, sticky = true },
+      },
+    }
+  return DEFAULTS
+end
 
 ---Resolved `tabs.badges`, or nil when off. `true` takes the defaults.
 ---@return table|nil
@@ -40,21 +45,22 @@ function M.options()
   if not user then
     return nil
   end
+  local defaults = M.defaults()
   if user == true then
-    return M.DEFAULTS
+    return defaults
   end
   local out = {}
-  for k, v in pairs(M.DEFAULTS) do
+  for k, v in pairs(defaults) do
     out[k] = v
   end
   for k, v in pairs(user) do
     out[k] = v
   end
   if out.bell == true then
-    out.bell = M.DEFAULTS.bell
+    out.bell = defaults.bell
   end
   if out.output == true then
-    out.output = { icon = nf.md_message_badge or nf.md_bell_outline, color = 5 }
+    out.output = { icon = icons.symbol "Badge.output", color = 5 }
   end
   return out
 end

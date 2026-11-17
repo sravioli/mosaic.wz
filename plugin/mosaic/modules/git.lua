@@ -7,7 +7,7 @@
 ---blocks; re-read when the directory changes and every `interval` seconds.
 ---Options: `interval` (default 5), `detached = false` (hide detached HEADs).
 
-local wezterm = require "wezterm"
+local icons = require "mosaic.engine.icons"
 
 local config = require "mosaic.engine.config"
 local paths = require "mosaic.engine.paths"
@@ -98,8 +98,7 @@ return function(_, pane)
     padding = { left = 1 },
     icon = {
       enabled = true,
-      value = detached and (wezterm.nerdfonts.md_source_commit or "")
-        or (wezterm.nerdfonts.dev_git_branch or ""),
+      value = detached and icons.symbol "Git.commit" or icons.symbol "Git.branch",
       padding = { right = 1 },
     },
     text = { enabled = true, value = name },

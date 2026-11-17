@@ -5,30 +5,40 @@
 ---Glyph maps shared by the `process` / `domain` modules and the tab
 ---components. Users merge their own over these with an `icons` option.
 
-local wezterm = require "wezterm"
-
-local nf = wezterm.nerdfonts
-
 local M = {}
 
----Programs sigil has no entry for; sigil's registry covers the rest.
-M.PROCESS = {
-  python3 = nf.dev_python,
-  top = nf.md_chart_areaspline,
-}
+---A sigil symbol by dotted path, or `fallback` (default `""`) when this sigil
+---has no such path, e.g. an older cached clone.
+---@param  path      string
+---@param  fallback? string
+---@return string
+function M.symbol(path, fallback)
+  local glyph = require("mosaic.engine.deps").sigil().symbol(path)
+  if type(glyph) ~= "string" then
+    return fallback or ""
+  end
+  return glyph
+end
 
----Glyph for a program neither sigil nor `PROCESS` knows.
-M.PROCESS_DEFAULT = nf.md_console
-
----Domain name prefix -> glyph, tried longest first.
+---Domain name prefix -> sigil symbol path, tried longest first.
 M.DOMAIN = {
-  local_ = nf.md_monitor,
-  SSH = nf.md_ssh,
-  SSHMUX = nf.md_ssh,
-  WSL = nf.md_microsoft_windows,
-  docker = nf.md_docker,
-  unix = nf.cod_terminal_linux,
+  local_ = "Domain.local",
+  SSH = "Domain.ssh",
+  SSHMUX = "Domain.ssh",
+  WSL = "Domain.wsl",
+  docker = "Domain.docker",
+  unix = "Domain.unix",
 }
+
+---Glyphs for `M.DOMAIN`, resolved through sigil at call time.
+---@return table
+local function domain_glyphs()
+  local out = {}
+  for prefix, path in pairs(M.DOMAIN) do
+    out[prefix] = M.symbol(path)
+  end
+  return out
+end
 
 ---Glyph for `name` from `defaults` overlaid by `user`; `fallback` otherwise.
 ---@param  defaults table
@@ -52,12 +62,13 @@ end
 ---@param  user table|nil
 ---@return string|nil
 function M.domain(name, user)
-  local exact = M.lookup(M.DOMAIN, user, name == "local" and "local_" or name)
+  local defaults = domain_glyphs()
+  local exact = M.lookup(defaults, user, name == "local" and "local_" or name)
   if exact or (user and user[name] == false) then
     return exact
   end
   local best, len = nil, 0
-  for i, map in ipairs { M.DOMAIN, user or {} } do
+  for i, map in ipairs { defaults, user or {} } do
     for prefix, glyph in pairs(map) do
       -- The user's map wins ties.
       local longer = #prefix > len or (i == 2 and #prefix == len)
@@ -66,7 +77,7 @@ function M.domain(name, user)
       end
     end
   end
-  return best or nf.md_server_network
+  return best or M.symbol "Domain.default"
 end
 
 ---Glyph for a process basename.
@@ -80,7 +91,7 @@ function M.process(name, user)
       return entry.icon
     end
   end
-  return M.lookup(M.PROCESS, user, name, M.PROCESS_DEFAULT)
+  return M.lookup({}, user, name, M.symbol "Process")
 end
 
 return M

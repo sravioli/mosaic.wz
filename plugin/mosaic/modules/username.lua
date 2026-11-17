@@ -13,5 +13,5 @@ return function(_, pane)
   if not name or name == "" then
     return { enabled = false }
   end
-  return cell("md_account", name)
+  return cell("Status.user", name)
 end

@@ -6,11 +6,9 @@
 ---(`/ … /`); `slanted-inverted` leans the other way (`\ … \`). The outermost
 ---module on each side keeps a flat edge against the window.
 
-local wezterm = require "wezterm"
-
 local mosaic = require "mosaic.api"
 
-local nf = wezterm.nerdfonts
+local tri = mosaic.icons().Sep.triangle or {}
 
 ---@param  open  string glyph before a block
 ---@param  close string glyph after a block
@@ -87,7 +85,7 @@ local function build(open, close)
   }
 end
 
-local preset = build(nf.ple_lower_right_triangle or "", nf.ple_upper_left_triangle or "")
+local preset = build(tri.lower_right or "", tri.upper_left or "")
 -- Not a preset field: `slanted-inverted` returns it.
-preset.inverted = build(nf.ple_upper_right_triangle or "", nf.ple_lower_left_triangle or "")
+preset.inverted = build(tri.upper_right or "", tri.lower_left or "")
 return preset

@@ -7,8 +7,6 @@
 ---`PaneInformation.progress` (WezTerm nightly). Older builds have neither, so
 ---callers read it defensively and treat a failure as no progress.
 
-local wezterm = require "wezterm"
-
 local M = {}
 
 ---@alias Mosaic.Progress { kind: "percent"|"error"|"indeterminate", value: number }
@@ -40,19 +38,17 @@ end
 ---@param  p Mosaic.Progress
 ---@return string
 function M.glyph(p)
-  local nf = wezterm.nerdfonts
+  local icons = require "mosaic.engine.icons"
   if p.kind == "error" then
-    return nf.md_alert_circle or "!"
+    return icons.symbol("Progress.error", "!")
   elseif p.kind == "indeterminate" then
-    return nf.md_timer_sand or "~"
+    return icons.symbol("Progress.indeterminate", "~")
   end
   local step = math.floor(p.value / 12.5 + 0.5)
   if step <= 0 then
-    return nf.md_circle_outline or "o"
-  elseif step >= 8 then
-    return nf.md_circle_slice_8 or "o"
+    return icons.symbol("Progress.empty", "o")
   end
-  return nf["md_circle_slice_" .. step] or "o"
+  return icons.symbol("Progress.steps." .. math.min(step, 8), "o")
 end
 
 ---Text for `p`: `42%`, or empty while indeterminate.
