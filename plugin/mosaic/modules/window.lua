@@ -19,5 +19,5 @@ return function(window, pane)
   if title == "" then
     return { enabled = false }
   end
-  return cell("md_application_outline", title)
+  return cell("Status.window", title)
 end

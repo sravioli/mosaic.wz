@@ -10,6 +10,7 @@
 ---shortcut: a line-based reader for the usual kubeconfig layout, not a YAML
 ---parser; inline flow maps (`{...}`) are not understood.
 
+local icons = require "mosaic.engine.icons"
 local wezterm = require "wezterm"
 
 local config = require "mosaic.engine.config"
@@ -109,7 +110,7 @@ return function()
     padding = { left = 1 },
     icon = {
       enabled = true,
-      value = wezterm.nerdfonts.md_kubernetes or "",
+      value = icons.symbol "Status.kube",
       padding = { right = 1 },
     },
     text = { enabled = true, value = value, variants = namespace and { context } or nil },

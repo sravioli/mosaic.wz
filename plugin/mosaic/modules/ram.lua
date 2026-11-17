@@ -11,5 +11,5 @@ return function()
   if not system.supported() then
     return { enabled = false }
   end
-  return cell("md_memory", system.percent(system.ram()), { interval = 3 })
+  return cell("Status.ram", system.percent(system.ram()), { interval = 3 })
 end

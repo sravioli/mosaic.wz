@@ -15,7 +15,7 @@ return function(_, pane)
   if not ok or not name or (name == "local" and not opts.show_local) then
     return { enabled = false }
   end
-  local spec = cell("md_server_network", name)
+  local spec = cell("Domain.default", name)
   local glyph = icons.domain(name, opts.icons)
   spec.icon.enabled = glyph ~= nil and glyph ~= ""
   spec.icon.value = glyph or ""

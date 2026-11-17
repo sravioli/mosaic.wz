@@ -10,7 +10,7 @@ return function(window)
   local tabs = window:mux_window():tabs_with_info()
   for _, info in ipairs(tabs) do
     if info.is_active then
-      return cell("md_tab", ("%d/%d"):format(info.index + 1, #tabs))
+      return cell("Status.tab", ("%d/%d"):format(info.index + 1, #tabs))
     end
   end
   return { enabled = false }

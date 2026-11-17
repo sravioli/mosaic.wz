@@ -15,6 +15,7 @@
 ---
 ---shortcut: Windows is unsupported until a non-blocking source exists.
 
+local icons = require "mosaic.engine.icons"
 local wezterm = require "wezterm"
 
 local config = require "mosaic.engine.config"
@@ -202,7 +203,6 @@ return function()
   if opts.max_length then
     text = paths.shorten(text, { max_length = opts.max_length })
   end
-  local nf = wezterm.nerdfonts
   return {
     enabled = true,
     cond = true,
@@ -210,7 +210,7 @@ return function()
     padding = { left = 1 },
     icon = {
       enabled = true,
-      value = (track.status == "playing" and nf.md_music or nf.md_pause) or "",
+      value = icons.symbol(track.status == "playing" and "Media.playing" or "Media.paused"),
       padding = { right = 1 },
     },
     text = { enabled = true, value = text, variants = { track.title } },

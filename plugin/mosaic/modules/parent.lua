@@ -24,5 +24,5 @@ return function(_, pane)
   elseif opts.max_length then
     text = paths.shorten(text, { max_length = opts.max_length })
   end
-  return cell("md_folder_open", text)
+  return cell("Status.parent", text)
 end

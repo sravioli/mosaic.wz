@@ -5,7 +5,7 @@
 ---How many other tabs have a badge (see `tabs.badges`), in the colour
 ---of the first one's badge; hidden at zero.
 
-local wezterm = require "wezterm"
+local icons = require "mosaic.engine.icons"
 
 local badges = require "mosaic.tabs.badges"
 
@@ -23,7 +23,7 @@ return function(window)
     padding = { left = 1 },
     icon = {
       enabled = true,
-      value = first.icon or wezterm.nerdfonts.md_bell_ring or "",
+      value = first.icon or icons.symbol "Badge.bell",
       padding = { right = 1 },
     },
     text = { enabled = true, value = tostring(#pending) },

@@ -4,7 +4,7 @@
 
 ---Shows ZOOM while the active pane is zoomed.
 
-local wezterm = require "wezterm"
+local icons = require "mosaic.engine.icons"
 
 return {
   enabled = true,
@@ -23,7 +23,7 @@ return {
   padding = { left = 1 },
   icon = {
     enabled = true,
-    value = wezterm.nerdfonts.md_arrow_expand_all,
+    value = icons.symbol "Status.zoomed",
   },
   text = {
     enabled = true,

@@ -4,11 +4,9 @@
 
 ---Every module is a rounded pill in its accent colour.
 
-local wezterm = require "wezterm"
-
 local mosaic = require "mosaic.api"
 
-local nf = wezterm.nerdfonts
+local circle = mosaic.icons().Sep.circle or {}
 ---Every module a rounded pill in its colour. `style.separators` replaces
 ---the caps (`left` before, `right` after).
 ---@param  spec table module spec (content only)
@@ -26,8 +24,8 @@ local function decorate(spec, ctx)
   out.sep = {
     enabled = true,
     value = {
-      right = seps.left or nf.ple_left_half_circle_thick or "",
-      left = seps.right or nf.ple_right_half_circle_thick or "",
+      right = seps.left or circle.left or "",
+      left = seps.right or circle.right or "",
     },
     -- No background: the bar's own surface shows around the pill.
     style = function(_, parent)
@@ -38,8 +36,8 @@ local function decorate(spec, ctx)
 end
 
 local CAPS = {
-  left = nf.ple_left_half_circle_thick or "",
-  right = nf.ple_right_half_circle_thick or "",
+  left = circle.left or "",
+  right = circle.right or "",
 }
 
 ---@param  ctx Mosaic.TabContext

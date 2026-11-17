@@ -13,5 +13,5 @@ return function(_, pane)
   if not title or title == "" then
     return { enabled = false }
   end
-  return cell("md_format_title", title)
+  return cell("Status.title", title)
 end

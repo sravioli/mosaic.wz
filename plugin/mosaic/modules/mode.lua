@@ -6,7 +6,7 @@
 ---Options: `modes = { copy_mode = { text, icon, color } }` per key table,
 ---and `format = fun(name): string` for the default text.
 
-local wezterm = require "wezterm"
+local icons = require "mosaic.engine.icons"
 
 local cond = require "mosaic.engine.conditions"
 local config = require "mosaic.engine.config"
@@ -25,7 +25,7 @@ return function(window)
   local name = per.text or (opts.format or default_name)(active)
   local icon = per.icon
   if icon == nil then
-    icon = wezterm.nerdfonts.md_keyboard or ""
+    icon = icons.symbol "Status.keyboard"
   end
   return {
     enabled = true,

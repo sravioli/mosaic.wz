@@ -55,7 +55,7 @@ end
 ---Whether sigil has been loaded (a layout named a built-in or a preset ran).
 ---@return boolean
 function M.icons_loaded()
-  return sigil_symbols ~= nil
+  return sigil ~= nil
 end
 
 ---Icon table from sigil, loaded on first call.

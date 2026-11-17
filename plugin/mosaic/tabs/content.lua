@@ -10,13 +10,9 @@
 ---per-component colours (the preset owns the cell); add segment output if
 ---users ask for coloured parts.
 
-local wezterm = require "wezterm"
-
 local icons = require "mosaic.engine.icons"
 local paths = require "mosaic.engine.paths"
 local str = require("mosaic.engine.deps").warp.string
-
-local nf = wezterm.nerdfonts
 
 local M = {}
 
@@ -79,12 +75,12 @@ M.COMPONENTS = {
     if not pane_of(tab).is_zoomed then
       return nil
     end
-    return opts.icon or nf.md_magnify_plus_outline or "Z"
+    return opts.icon or icons.symbol("Badge.zoom", "Z")
   end,
   output = function(tab, opts)
     for _, pane in ipairs(tab.panes or {}) do
       if pane.has_unseen_output then
-        return opts.icon or nf.md_bell_ring_outline or "!"
+        return opts.icon or icons.symbol("Badge.bell_outline", "!")
       end
     end
     return opts.idle
@@ -94,7 +90,7 @@ M.COMPONENTS = {
     if n <= 1 then
       return nil
     end
-    return (opts.icon or nf.md_view_split_vertical or "#") .. n
+    return (opts.icon or icons.symbol("Status.panes", "#")) .. n
   end,
   progress = function(tab, opts)
     local ok, raw = pcall(function()

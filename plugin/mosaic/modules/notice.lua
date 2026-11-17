@@ -4,7 +4,7 @@
 
 ---The latest `mosaic.notify` message while it lasts; hidden otherwise.
 
-local wezterm = require "wezterm"
+local icons = require "mosaic.engine.icons"
 
 local notice = require "mosaic.engine.notice"
 
@@ -15,7 +15,7 @@ return function(window)
   end
   local icon = msg.icon
   if icon == nil then
-    icon = wezterm.nerdfonts.md_information_outline or ""
+    icon = icons.symbol "Status.info"
   end
   return {
     enabled = true,
