@@ -14,36 +14,29 @@
 ---(cpu, network) live in `wezterm.GLOBAL` so they survive config reloads.
 ---Every sampler returns nil on failure instead of raising.
 
-local wezterm = require "wezterm"
-
 local log = require "mosaic.engine.logger"
 
 local M = {}
 
-local triple = wezterm.target_triple or ""
-M.os = triple:find("windows", 1, true) and "windows"
-  or triple:find("darwin", 1, true) and "macos"
-  or "linux"
+local warp = require("mosaic.engine.deps").warp
+
+-- mosaic's own names; warp says "mac" and "unknown".
+M.os = ({ windows = "windows", mac = "macos" })[warp.filesystem.platform().os] or "linux"
 
 -- ── IO (replaceable in specs) ──────────────────────────────────────────────
 
 ---@param  path string
 ---@return string|nil
 function M.read_file(path)
-  local f = io.open(path, "r")
-  if not f then
-    return nil
-  end
-  local s = f:read "*a"
-  f:close()
-  return s
+  return warp.filesystem.read_file(path)
 end
 
+---warp resolves `ps`, `sysctl` and `df` even when a GUI launch leaves PATH short.
 ---@param  argv string[]
 ---@return string|nil stdout
 function M.run(argv)
-  local ok, success, stdout = pcall(wezterm.run_child_process, argv)
-  if ok and success then
+  local ok, stdout = warp.process.run(argv)
+  if ok then
     return stdout
   end
   log:debug("%s failed", argv[1])

@@ -11,15 +11,7 @@ local Opts = require("mosaic.engine.config").live ---@class Mosaic.Options
 local M = require "mosaic.engine.render.state"
 
 ---Shallow copy of a table.
----@param  t table
----@return table
-function M.copy(t)
-  local out = {}
-  for k, v in pairs(t) do
-    out[k] = v
-  end
-  return out
-end
+M.copy = require("mosaic.engine.deps").warp.table.copy
 
 ---Copy of `module` padded by one column inside its icon/text, styled like
 ---them, instead of by module padding, which is drawn unstyled (transparent).

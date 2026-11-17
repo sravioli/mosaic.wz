@@ -149,6 +149,12 @@ end)
 
 describe("cwd and parent", function()
   it("shorten the home directory, apply aliases and cut long paths", function()
+    local fs = require("mosaic.engine.deps").warp.filesystem
+    local home = fs.home
+    fs.home = "/home/mock" -- warp reads HOME, not the mock's home_dir
+    finally(function()
+      fs.home = home
+    end)
     local cwd = "file://devbox.local/home/mock/work/deep/nested/project"
     local _, right = bar({
       preset = "minimal",
@@ -156,6 +162,7 @@ describe("cwd and parent", function()
       options = { cwd = { git_root = false, home = "~", cond = true } },
     }, { cwd = cwd })
     assert.is_true(has(plain(right), "~/work/deep/nested/project"), plain(right))
+    fs.home = home
     _, right = bar({
       preset = "minimal",
       layout = { right = { "cwd" } },

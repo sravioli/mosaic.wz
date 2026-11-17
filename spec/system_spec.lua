@@ -187,7 +187,9 @@ describe("mosaic.engine.system", function()
     it("runs df for disk usage", function()
       wezterm._child = { ok = true, stdout = DF, stderr = "" }
       assert.near(0.25, system.disk(), 1e-6)
-      assert.same({ "df", "-kP", "/" }, wezterm._child_calls[1])
+      local argv = wezterm._child_calls[1]
+      assert.matches("df$", argv[1]) -- warp resolves it to an absolute path
+      assert.same({ "-kP", "/" }, { argv[2], argv[3] })
     end)
   end)
 
@@ -198,14 +200,15 @@ describe("mosaic.engine.system", function()
 
     it("uses argument lists, never a shell", function()
       wezterm._child = function(argv)
-        if argv[1] == "sysctl" then
+        if argv[1]:find "sysctl$" then
           return true, "8\n", ""
         end
         return true, "%CPU\n 200.0\n 200.0\n", ""
       end
       assert.near(0.5, system.cpu(), 1e-9)
       for _, argv in ipairs(wezterm._child_calls) do
-        assert.is_true(argv[1] == "sysctl" or argv[1] == "ps", argv[1])
+        local name = argv[1]:match "[^/\\]+$"
+        assert.is_true(name == "sysctl" or name == "ps", argv[1])
         assert.is_nil(argv[1]:find "sh$")
       end
     end)

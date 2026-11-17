@@ -5,9 +5,12 @@
 ---Working directories for modules and tab components: read from a Pane or a
 ---PaneInformation without blocking, and shortened for display.
 
-local wezterm = require "wezterm"
-
 local M = {}
+
+---Loaded on first use: deps pulls in every dependency.
+local function fs()
+  return require("mosaic.engine.deps").warp.filesystem
+end
 
 ---Path of a cwd value: a Url object (`.file_path`), a `file://host/path`
 ---string, or a plain path.
@@ -72,11 +75,7 @@ function M.basename(path)
   if not path or path == "" then
     return ""
   end
-  local trimmed = path:gsub("[/\\]+$", "")
-  if trimmed == "" then
-    return path:sub(1, 1)
-  end
-  return trimmed:match "([^/\\]+)$" or trimmed
+  return fs().basename(path)
 end
 
 ---Parent directory of `path`.
@@ -105,11 +104,11 @@ function M.shorten(path, opts)
       break
     end
   end
-  local home = wezterm.home_dir
-  if opts.home and home and home ~= "" and path:sub(1, #home) == home then
-    local rest = path:sub(#home + 1)
-    if rest == "" or rest:match "^[/\\]" then
-      path = opts.home .. rest
+  if opts.home then
+    -- warp matches whole components, and ignores case and slash style on Windows.
+    local tilded = fs().tilde(path)
+    if tilded ~= path or path == "~" or path:find "^~[/\\]" then
+      path = opts.home .. tilded:sub(2)
     end
   end
   local max = tonumber(opts.max_length)
