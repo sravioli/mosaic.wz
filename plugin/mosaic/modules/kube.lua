@@ -29,7 +29,7 @@ function M.path(opts)
   end
   local env = os.getenv "KUBECONFIG"
   if env and env ~= "" then
-    local sep = wezterm.target_triple:find "windows" and ";" or ":"
+    local sep = require("mosaic.engine.system").os == "windows" and ";" or ":"
     return env:match("^([^" .. sep .. "]+)")
   end
   return wezterm.home_dir .. "/.kube/config"

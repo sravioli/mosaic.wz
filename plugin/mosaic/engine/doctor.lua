@@ -35,17 +35,6 @@ local PROGRAMS = {
   },
 }
 
----@return string|nil
-local function platform()
-  local triple = wezterm.target_triple
-  if triple:find "darwin" then
-    return "macos"
-  elseif triple:find "windows" then
-    return nil
-  end
-  return "linux"
-end
-
 ---Every module name of a layout, in order.
 ---@param  layout table
 ---@return string[]
@@ -119,7 +108,8 @@ function M.report(window)
     used[entry.name] = true
   end
 
-  local os_name = platform()
+  local system = require "mosaic.engine.system"
+  local os_name = system.supported() and system.os or nil
   if os_name then
     local which = deps.warp.process.which
     local parts = {}

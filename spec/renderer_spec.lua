@@ -200,6 +200,21 @@ describe("status-bar renderer", function()
     end
   end)
 
+  it("keeps greedy separator-only fallbacks within the available width", function()
+    local function with_sep(icon, text)
+      local m = make_module(icon, text)
+      m.sep = { enabled = true, value = { left = "<<", right = ">>" } }
+      return m
+    end
+    opts.modules.first = with_sep("A", "alpha")
+    opts.modules.second = with_sep("B", "bravo")
+
+    for width = 0, 20 do
+      local result = render({ "first", "second" }, width, "greedy")
+      assert.is_true(visible_width(result) <= width, "width " .. width)
+    end
+  end)
+
   it("truncates long Unicode text by display columns", function()
     opts.modules.unicode = make_module("", string.rep("中", 8))
 

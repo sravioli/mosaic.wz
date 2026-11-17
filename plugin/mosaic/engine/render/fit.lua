@@ -45,9 +45,12 @@ local function render_group_greedy(names, avail_cols)
         end
       end
 
-      -- can_hide fallback: separator only
+      -- can_hide fallback: separator only, when even that fits the budget
       if best_w < 0 and module.can_hide then
         best_fmt, best_w = build_cell_sep_only(module, parts)
+        if best_w > remaining then
+          best_fmt, best_w = "", -1
+        end
       end
 
       if best_w >= 0 then

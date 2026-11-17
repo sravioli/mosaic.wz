@@ -20,6 +20,7 @@ local wezterm = require "wezterm"
 local config = require "mosaic.engine.config"
 local paths = require "mosaic.engine.paths"
 local store = require "mosaic.engine.store"
+local system = require "mosaic.engine.system"
 local process = require("mosaic.engine.deps").warp.process
 
 local KEY = "__mosaic:media"
@@ -46,17 +47,6 @@ if t is "" or t does not start with "playing" then
 end if
 return t
 ]]
-
----@return string|nil os "linux" | "macos" | nil
-local function platform()
-  local triple = wezterm.target_triple
-  if triple:find "darwin" then
-    return "macos"
-  elseif triple:find "windows" then
-    return nil
-  end
-  return "linux"
-end
 
 local MPRIS = "org.mpris.MediaPlayer2."
 
@@ -138,7 +128,7 @@ local warned = false
 ---Ask the player once; store `{ status, artist, title }` or false.
 ---@param opts table
 local function poll(opts)
-  local os_name = platform()
+  local os_name = system.os
   local ok, out
   if os_name == "linux" then
     if process.which "playerctl" then
@@ -188,7 +178,7 @@ local function tick(gen)
 end
 
 return function()
-  if not platform() then
+  if not system.supported() then
     return { enabled = false }
   end
   local gen = store.value(GEN)
