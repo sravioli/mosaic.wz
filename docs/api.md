@@ -574,10 +574,10 @@ _Returns:_
 ### mosaic.cond.is_default_workspace
 
 ```lua
-mosaic.cond.is_default_workspace(window: table, _: any) -> inactive: boolean
+mosaic.cond.is_default_workspace(window: table, _: any) -> default: boolean
 ```
 
-Check whether the active workspace name is empty.
+Check whether the active workspace is the default one.
 
 **Parameters:**
 
@@ -586,7 +586,7 @@ Check whether the active workspace name is empty.
 
 _Returns:_
 
-- `inactive` (`boolean`): true if no workspace is active.
+- `default` (`boolean`): true if the default workspace is active.
 
 ### mosaic.cond.leader_active
 
