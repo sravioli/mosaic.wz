@@ -25,6 +25,14 @@ return function(_, pane)
     enabled = true,
     cond = cond.hints_inactive,
     can_hide = true,
+    -- The git-root walk opens a file per parent directory: redo it only when
+    -- the pane's directory changes, or every few seconds (a `git init`).
+    update = {
+      key = function(_, p)
+        return paths.cwd(p)
+      end,
+      interval = opts.interval or 5,
+    },
     icon = {
       enabled = true,
       value = icons.Folder,

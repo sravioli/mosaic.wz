@@ -90,6 +90,7 @@ Some built-ins read keys of their own:
 | `cwd`      | `home`                                                  | `nil`                                     | Replace the home directory, e.g. `"~"`.                                  |
 | `cwd`      | `aliases`                                               | `nil`                                     | `{ { pattern = "^/srv/www", replacement = "www" } }`, applied first.     |
 | `cwd`      | `max_length`                                            | `nil`                                     | Cut from the left past this width.                                       |
+| `cwd`      | `interval`                                              | `5`                                       | Seconds between git-root checks while the directory stays the same.      |
 | `parent`   | `full`, `home`, `aliases`, `max_length`                 |                                           | `full = true` shows the whole parent path.                               |
 | `clock`    | `icons`                                                 | hour faces                                | `false`, or `{ ["00"] = glyph, ... }` by 24-hour hour.                   |
 | `battery`  | `all`                                                   | `false`                                   | Every battery's charge.                                                  |

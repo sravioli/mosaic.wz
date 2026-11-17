@@ -146,6 +146,13 @@ describe("built-in modules", function()
     assert.is_nil(call("ssh", nil, pane { domain = "SSH:box" }).update)
   end)
 
+  it("cwd caches its git-root walk per pane directory", function()
+    local spec = call("cwd", nil, pane { cwd = "file://host/srv/a" })
+    assert.equal(5, spec.update.interval)
+    assert.equal("/srv/a", spec.update.key(nil, pane { cwd = "file://host/srv/a" }))
+    assert.equal("/srv/b", spec.update.key(nil, pane { cwd = "file://host/srv/b" }))
+  end)
+
   it("parent shows the parent directory name", function()
     assert.equal(
       "source",
