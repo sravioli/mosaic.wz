@@ -113,6 +113,14 @@ M.hints_inactive = function(window, _)
   return window:active_key_table() == nil and window:leader_is_active() ~= true
 end
 
+---Name of the default workspace: `config.default_workspace`, else WezTerm's
+---`"default"`. Reads the config the renderer already fetched this frame.
+---@return string
+local function default_workspace()
+  local cfg = require("mosaic.engine.render.state").config
+  return (cfg and cfg.default_workspace) or "default"
+end
+
 ---Check whether the active workspace name is not empty.
 ---
 ---@param window table WezTerm window object.
@@ -122,13 +130,13 @@ M.has_workspace = function(window, _)
   return window:active_workspace() ~= ""
 end
 
----Check whether the active workspace name is empty.
+---Check whether the active workspace is the default one.
 ---
 ---@param window table WezTerm window object.
 ---@param _ any Unused pane parameter.
----@return boolean inactive True if no workspace is active.
+---@return boolean default True if the default workspace is active.
 M.is_default_workspace = function(window, _)
-  return window:active_workspace() == ""
+  return window:active_workspace() == default_workspace()
 end
 
 ---Check whether the leader key is active.
