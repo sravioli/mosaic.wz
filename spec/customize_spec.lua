@@ -243,6 +243,25 @@ describe("decorator style", function()
     }
     assert.is_true(has(right, "Background={Color=#808080}"), right)
   end)
+
+  it("powerline resolves bright and function colours on the right", function()
+    local _, right = bar {
+      preset = "powerline",
+      layout = { right = { { "a", "b" } } },
+      modules = { a = content "A", b = content "B" },
+      style = {
+        colors = {
+          a = 9,
+          b = function()
+            return "#123456"
+          end,
+        },
+      },
+    }
+    -- 9 is bright 1 of the theme, never the literal colour "9".
+    assert.is_false(has(right, "Color=9}"), right)
+    assert.is_true(has(right, "Background={Color=#123456}"), right)
+  end)
 end)
 
 describe("tabs.style", function()

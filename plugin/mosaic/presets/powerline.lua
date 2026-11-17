@@ -85,7 +85,7 @@ local function decorate(spec, ctx)
     if c == nil then
       return stops[i]
     end
-    return type(c) == "number" and ctx.theme.ansi[c] or c
+    return mosaic.palette.resolve(ctx.theme, c)
   end
   local bg = segment(ctx.index)
   local prev = ctx.index > 1 and segment(ctx.index - 1) or nil
