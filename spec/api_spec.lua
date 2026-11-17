@@ -280,3 +280,49 @@ describe("mosaic.api", function()
     end
   end)
 end)
+
+describe("mosaic.cond.is_default_workspace", function()
+  local function window(name)
+    return {
+      active_workspace = function()
+        return name
+      end,
+    }
+  end
+
+  it("matches WezTerm's default workspace name", function()
+    local cond = require "mosaic.engine.conditions"
+    local state = require "mosaic.engine.render.state"
+    local saved = state.config
+    state.config = nil
+    assert.is_true(cond.is_default_workspace(window "default"))
+    assert.is_false(cond.is_default_workspace(window "work"))
+    state.config = { default_workspace = "main" }
+    assert.is_true(cond.is_default_workspace(window "main"))
+    state.config = saved
+  end)
+end)
+
+describe("process icons", function()
+  it("come from sigil's registry, with user overrides first", function()
+    local icons = require "mosaic.engine.icons"
+    local sigil = require("mosaic.engine.deps").sigil()
+    assert.equal(sigil.icon("nvim", { fallback = false }), icons.process "nvim")
+    assert.equal("N", icons.process("nvim", { nvim = "N" }))
+    assert.is_nil(icons.process("nvim", { nvim = false }))
+    assert.equal(icons.PROCESS_DEFAULT, icons.process "no-such-program")
+  end)
+end)
+
+describe("invalid options", function()
+  it("drop only the bad value, not the whole section", function()
+    local config = require "mosaic.engine.config"
+    config.setup {
+      style = { colors = { cwd = "" }, separators = { left = "<" } },
+    }
+    assert.equal("<", config.live.style.separators.left)
+    assert.is_nil(config.live.style.colors.cwd)
+    assert.truthy(config.issues[1]:find("cwd", 1, true))
+    config.setup {}
+  end)
+end)
