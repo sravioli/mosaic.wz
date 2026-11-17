@@ -11,47 +11,13 @@ local nf = wezterm.nerdfonts
 
 local M = {}
 
----Foreground process basename -> glyph.
+---Programs sigil has no entry for; sigil's registry covers the rest.
 M.PROCESS = {
-  bash = nf.cod_terminal_bash,
-  btm = nf.md_chart_donut_variant,
-  btop = nf.md_chart_areaspline,
-  bun = nf.md_hamburger,
-  cargo = nf.dev_rust,
-  curl = nf.md_flattr,
-  docker = nf.md_docker,
-  ["docker-compose"] = nf.md_docker,
-  fish = nf.md_fish,
-  gh = nf.dev_github_badge,
-  git = nf.dev_git,
-  go = nf.md_language_go,
-  htop = nf.md_chart_areaspline,
-  kubectl = nf.md_kubernetes,
-  lazygit = nf.dev_git,
-  lua = nf.seti_lua,
-  make = nf.seti_makefile,
-  node = nf.md_nodejs,
-  npm = nf.md_npm,
-  nu = nf.md_console,
-  nvim = nf.custom_neovim,
-  pnpm = nf.md_npm,
-  psql = nf.dev_postgresql,
-  pwsh = nf.md_powershell,
-  python = nf.dev_python,
   python3 = nf.dev_python,
-  ruby = nf.dev_ruby,
-  rustc = nf.dev_rust,
-  ssh = nf.md_lan_connect,
-  sudo = nf.fa_hashtag,
-  tmux = nf.cod_terminal_tmux,
   top = nf.md_chart_areaspline,
-  vim = nf.dev_vim,
-  wget = nf.md_arrow_down_box,
-  yazi = nf.md_folder,
-  zsh = nf.dev_terminal,
 }
 
----Glyph for anything not in `PROCESS`.
+---Glyph for a program neither sigil nor `PROCESS` knows.
 M.PROCESS_DEFAULT = nf.md_console
 
 ---Domain name prefix -> glyph, tried longest first.
@@ -108,6 +74,12 @@ end
 ---@param  user table|nil
 ---@return string|nil
 function M.process(name, user)
+  if user == nil or user[name] == nil then
+    local entry = require("mosaic.engine.deps").sigil().get(name, { fallback = false })
+    if entry and entry.icon then
+      return entry.icon
+    end
+  end
   return M.lookup(M.PROCESS, user, name, M.PROCESS_DEFAULT)
 end
 

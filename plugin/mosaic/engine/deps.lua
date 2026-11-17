@@ -41,7 +41,16 @@ M.log = require_plugin("log.api", "log")
 M.warden = require_plugin("warden.api", "warden")
 M.ribbon = require_plugin("ribbon.api", "ribbon")
 
-local sigil_symbols
+local sigil, sigil_symbols
+
+---The sigil plugin (program icons and symbols), loaded on first call.
+---@return table
+function M.sigil()
+  if not sigil then
+    sigil = require_plugin("sigil.api", "sigil")
+  end
+  return sigil
+end
 
 ---Whether sigil has been loaded (a layout named a built-in or a preset ran).
 ---@return boolean
@@ -53,7 +62,7 @@ end
 ---@return table
 function M.icons()
   if not sigil_symbols then
-    sigil_symbols = require_plugin("sigil.api", "sigil").symbols()
+    sigil_symbols = M.sigil().symbols()
   end
   return sigil_symbols
 end
