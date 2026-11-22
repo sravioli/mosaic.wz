@@ -27,7 +27,7 @@ local status = require "mosaic.engine.status"
 ---@field INTEGRATION_API integer Version of the integration contract.
 local M = {}
 
-M.VERSION = "1.0.0"
+M.VERSION = "1.0.1"
 
 ---Width accounting shared with `format-tab-title` handlers.
 M.budget = require "mosaic.engine.budget"

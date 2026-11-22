@@ -2,6 +2,39 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [1.0.1](https://github.com/sravioli/mosaic.wz/compare/ad731f221eb0de1605c5c57ee870211b111db60b..1.0.1) - 2026-11-22
+#### Bug Fixes
+- (**conditions**) compare is_default_workspace with the configured default - ([81313db](https://github.com/sravioli/mosaic.wz/commit/81313db5536d4f44c79fcd7f7c887e583bb8d463)) - sravioli
+- (**config**) drop only the invalid options - ([b4af74d](https://github.com/sravioli/mosaic.wz/commit/b4af74d104791feef0f20e68b3cc7a0c36fad372)) - sravioli
+- (**cwd**) cache per directory and add an interval option - ([6b2117e](https://github.com/sravioli/mosaic.wz/commit/6b2117e4f70339c20b2167610f04ee406a145365)) - sravioli
+- (**powerline**) resolve right-side colors through the palette - ([f55cc4a](https://github.com/sravioli/mosaic.wz/commit/f55cc4a3e3227fe2b6bac52bbe5d90bef00fb9b0)) - sravioli
+- (**render**) keep greedy fit within budget, share platform detection - ([71f3b0c](https://github.com/sravioli/mosaic.wz/commit/71f3b0caeb6070f79ebf29ac526294677b5352a4)) - sravioli
+#### Documentation
+- regenerate the API reference - ([dc42560](https://github.com/sravioli/mosaic.wz/commit/dc4256038384e73b3641b958a77531fa7592608b)) - sravioli
+- retake the preset screenshots and load kanagawa from its remote - ([65ff7cd](https://github.com/sravioli/mosaic.wz/commit/65ff7cdeca2b45ce2df755d700c3ec4f1b5b9c5a)) - sravioli
+- add minit.lua for reproducing bugs - ([b57b15f](https://github.com/sravioli/mosaic.wz/commit/b57b15fbd989942151afd9817bdf7d61a162c4fb)) - sravioli
+#### Tests
+- cover is_default_workspace, process icons and invalid options - ([67cd6e9](https://github.com/sravioli/mosaic.wz/commit/67cd6e9402fdd33b87c22089f39b59baf6434d6b)) - sravioli
+#### Continuous Integration
+- restore the sigil pin and the generated API reference - ([66a5de4](https://github.com/sravioli/mosaic.wz/commit/66a5de4153ec75424ab581e25f303879a8202030)) - sravioli
+- pin warp to 1.0.1 - ([761622d](https://github.com/sravioli/mosaic.wz/commit/761622dc1d59213369ef79d562314cf96962377b)) - sravioli
+- pin sibling plugins to the current heads - ([24cd011](https://github.com/sravioli/mosaic.wz/commit/24cd0116c0863dccba2a067c9c41711839fd8f70)) - sravioli
+- pass the release tag to the shell through env - ([7465cd6](https://github.com/sravioli/mosaic.wz/commit/7465cd6b547c9ae346f2eb91f0244a7c1aa73bf3)) - sravioli
+- release from the pushed tag and pin warden with drop_invalid - ([edc7048](https://github.com/sravioli/mosaic.wz/commit/edc704893f034e8ded65b57c00fa6d216399b36f)) - sravioli
+- count only the plugin's own files in coverage - ([eb43e0a](https://github.com/sravioli/mosaic.wz/commit/eb43e0a25842e3503d4d63238192c164d08828f8)) - sravioli
+- bump cocogitto/cocogitto-action from 3.11 to 4 in the actions group across 1 directory (#2) - ([98db6e1](https://github.com/sravioli/mosaic.wz/commit/98db6e13a954a76aa5e72b98b7fd21aa65f41729)) - [@sravioli](https://github.com/sravioli)
+- adapt workflows to cocogitto-action v4 - ([0c14e31](https://github.com/sravioli/mosaic.wz/commit/0c14e31afca143fde4be9f6cdc011fe11d6d79d4)) - sravioli
+- bump cocogitto/cocogitto-action - ([ad731f2](https://github.com/sravioli/mosaic.wz/commit/ad731f221eb0de1605c5c57ee870211b111db60b)) - dependabot[bot]
+#### Refactoring
+- (**cell**) truncate with warp's string helper - ([49b1c31](https://github.com/sravioli/mosaic.wz/commit/49b1c3154efbc2bbf10785a6966228d8778db4ca)) - sravioli
+- (**icons**) take process icons from sigil - ([953431e](https://github.com/sravioli/mosaic.wz/commit/953431e8c892e61aa48cb33e88c8a1a6c9c1ab96)) - sravioli
+- load log and ribbon from warp - ([842d1bd](https://github.com/sravioli/mosaic.wz/commit/842d1bdfa45d58b5f5de518389db7175b46b8744)) - sravioli
+- take every glyph from sigil (#3) - ([fb93b76](https://github.com/sravioli/mosaic.wz/commit/fb93b768b098049d2ec4cf32f9ee18f6f1ad4232)) - [@sravioli](https://github.com/sravioli)
+- take every glyph from sigil - ([25695e5](https://github.com/sravioli/mosaic.wz/commit/25695e5d0c94097a3f27da391362e9f90404a2c3)) - sravioli
+- sample the system and shorten paths with warp - ([89e4bd6](https://github.com/sravioli/mosaic.wz/commit/89e4bd6d716ee374a21f91a2d5bb1fd2693478a5)) - sravioli
+
+- - -
+
 ## [1.0.0](https://github.com/sravioli/mosaic.wz/compare/1ff6e76e6c360c8fc011577e106d101f479143b8..1.0.0) - 2026-11-16
 #### Features
 - (**api**) add public api and entry point - ([b2e3c01](https://github.com/sravioli/mosaic.wz/commit/b2e3c019eea4109ebb2535e64bd1684fd2ed43c2)) - sravioli
