@@ -33,7 +33,7 @@ jobs:
           done <<'EOF'
           warp 1d5e7b586dc4a07e9d16ed3117804838b9a119a6
           warden cf2e98982709459d52324c3b60d263e57ff1f107
-          sigil dd4e336b5f0c4797a23070c2705d945cb6a5e500
+          sigil 2555f3737c2821d70a21245e8eaf948d2acaa5b7
           EOF
 
       - name: Install Lua
