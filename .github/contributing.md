@@ -74,15 +74,13 @@ You need:
    local mosaic = require "mosaic.api"
    ```
 
-   Specs load warp.wz, log.wz, warden.wz, sigil.wz, and ribbon.wz from sibling checkouts,
+   Specs load warp.wz, warden.wz, and sigil.wz from sibling checkouts,
    so clone them next to this repository:
 
    ```sh
    git clone https://github.com/sravioli/warp.wz ../warp.wz
-   git clone https://github.com/sravioli/log.wz ../log.wz
    git clone https://github.com/sravioli/warden.wz ../warden.wz
    git clone https://github.com/sravioli/sigil.wz ../sigil.wz
-   git clone https://github.com/sravioli/ribbon.wz ../ribbon.wz
    ```
 
 4. Run the checks to make sure that the setup works:

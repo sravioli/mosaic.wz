@@ -32,10 +32,8 @@ jobs:
             git -C "../$name.wz" checkout -q FETCH_HEAD
           done <<'EOF'
           warp 52a307aa46bbcaebadde78720c78519c1c6006c1
-          log e0f0740364aa6345b7f1e5f18d49a79e985c2954
           warden cf2e98982709459d52324c3b60d263e57ff1f107
-          sigil 2555f3737c2821d70a21245e8eaf948d2acaa5b7
-          ribbon 50c112ea616f07b2d582a7f7e48ca20e6a026494
+          sigil dd4e336b5f0c4797a23070c2705d945cb6a5e500
           EOF
 
       - name: Install Lua

@@ -487,7 +487,7 @@ _Returns:_
 
 - `logic_gate` (`fun(window: table, pane: table):boolean`): function returning true if any condition passes.
 
-### mosaic.cond.not_
+### mosaic.cond.not\_
 
 ```lua
 mosaic.cond.not_(condition: fun(window: table, pane: table):boolean) -> logic_gate: fun(window: table, pane: table):boolean

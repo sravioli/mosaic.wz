@@ -7,7 +7,7 @@ local wezterm = require "wezterm"
 
 local repo = assert(os.getenv "MOSAIC_REPO", "MOSAIC_REPO is not set")
 local cwd = os.getenv "MOSAIC_CWD" or wezterm.home_dir -- a short path leaves room for the modules
-for _, name in ipairs { "warp", "log", "warden", "sigil", "ribbon" } do
+for _, name in ipairs { "warp", "warden", "sigil" } do
   local base = repo .. "/../" .. name .. ".wz/plugin/"
   package.path = base .. "?.lua;" .. base .. "?/init.lua;" .. package.path
 end

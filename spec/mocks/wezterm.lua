@@ -1,5 +1,5 @@
 --- Hand-written wezterm mock for mosaic specs.
---- Also puts sibling plugin checkouts (warp, log, warden, sigil, ribbon) on
+--- Also puts sibling plugin checkouts (warp, warden, sigil) on
 --- package.path so mosaic runs against its real dependencies.
 
 if package.loaded["wezterm"] then
@@ -10,7 +10,7 @@ end
 local sep = package.config:sub(1, 1)
 local is_win = sep == "\\"
 
-for _, name in ipairs { "warp", "log", "warden", "sigil", "ribbon" } do
+for _, name in ipairs { "warp", "warden", "sigil" } do
   local base = "../" .. name .. ".wz/plugin/"
   package.path = base .. "?.lua;" .. base .. "?/init.lua;" .. package.path
 end

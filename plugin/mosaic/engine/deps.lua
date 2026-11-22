@@ -5,7 +5,7 @@
 ---Dependency loader. Prefers modules already on `package.path` (local dev
 ---checkouts, specs) and falls back to `wezterm.plugin.require`.
 ---
----The engine needs warp, log, warden and ribbon. sigil is only needed by the
+---The engine needs warp (with its log and ribbon modules) and warden. sigil is only needed by the
 ---built-in modules and presets, so it is loaded on first use.
 
 local wezterm = require "wezterm"
@@ -37,9 +37,9 @@ local function require_plugin(module, name)
 end
 
 M.warp = require_plugin("warp.api", "warp")
-M.log = require_plugin("log.api", "log")
+M.log = M.warp.log
 M.warden = require_plugin("warden.api", "warden")
-M.ribbon = require_plugin("ribbon.api", "ribbon")
+M.ribbon = M.warp.ribbon
 
 local sigil, sigil_symbols
 
